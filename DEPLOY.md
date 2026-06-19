@@ -41,13 +41,20 @@ admin/config.yml    ← dashboard settings
 3. Leave build settings blank (no build command, publish directory = `/` or empty). Deploy.
 4. In ~30 seconds you get a live URL like `random-name.netlify.app`. That's your site.
 
-### 3. Turn on the editing dashboard (Netlify Identity + Git Gateway)
-1. In your Netlify site → **Site configuration → Identity → Enable Identity.**
-2. Under Identity → **Registration**, set it to **Invite only** (so only you can log in).
-3. Still under Identity → **Services → Git Gateway → Enable.** *(This is what lets
-   the dashboard save to GitHub.)*
-4. Identity → **Invite users →** enter your own email → send. Check your inbox and
-   **accept the invite** — it opens your site and asks you to set a password.
+### 3. Turn on the editing dashboard (DecapBridge)
+> Netlify retired its old "Identity + Git Gateway" feature in 2025, so we use
+> **DecapBridge** instead — a free service that does the same two jobs: logs you
+> in, and lets the dashboard save to your GitHub repo. (It's missing from Netlify
+> because Netlify removed it — nothing wrong on your end.)
+
+1. Go to **[decapbridge.com](https://decapbridge.com)** and sign up (free).
+2. **Add a site** → connect your GitHub repo (`portfolio`) when prompted.
+3. It gives you four lines (repo, branch, identity_url, gateway_url). Open
+   `admin/config.yml`, and **paste them over the placeholders** at the top —
+   replace `YOUR-GITHUB-USERNAME/YOUR-REPO` and `YOUR-SITE-ID`. Commit the change
+   to GitHub.
+4. DecapBridge lets you **invite yourself by email** and set a password — that's
+   your dashboard login.
 
 ### 4. Edit!
 Go to **`your-site.netlify.app/admin/`**, log in, and you'll see your films.

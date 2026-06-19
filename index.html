@@ -50,17 +50,6 @@
     [data-r="fontdock"] { right: 14px !important; bottom: 14px !important; }
   }
 </style>
-<!-- Netlify Identity: when you accept the email invite, this logs you in and bounces you to the editing dashboard at /admin/. Invisible to visitors. -->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on('init', function (user) {
-      if (!user) {
-        window.netlifyIdentity.on('login', function () { document.location.href = '/admin/'; });
-      }
-    });
-  }
-</script>
 </helmet>
 
 <div style="background:#0a0a0a; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); min-height:100vh; -webkit-font-smoothing:antialiased; --font-display:{{ fontDisplay }}; --font-mono:{{ fontMono }};">

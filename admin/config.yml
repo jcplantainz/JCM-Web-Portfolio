@@ -1,8 +1,14 @@
+# ── Login + GitHub bridge via DecapBridge (replaces the deprecated Netlify Identity) ──
+# After you add your site at https://decapbridge.com it gives you these exact
+# four lines — paste them over the placeholders below. Nothing else changes.
 backend:
   name: git-gateway
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO          # e.g. jcmarcellus/portfolio
   branch: main
+  identity_url: https://auth.decapbridge.com/sites/YOUR-SITE-ID
+  gateway_url: https://gateway.decapbridge.com
 
-# Where Decap commits any images you upload through the dashboard.
+# Where the dashboard commits any images you upload.
 media_folder: "media"
 public_folder: "/media"
 
