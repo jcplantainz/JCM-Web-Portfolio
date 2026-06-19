@@ -1,0 +1,15 @@
+# Netlify build settings — no build step, just serve the files as-is.
+[build]
+  publish = "."
+
+# Make the editing dashboard reachable at /admin
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301
+
+# Send unknown URLs back to the home page
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

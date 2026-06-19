@@ -1,0 +1,17 @@
+{
+  "tagline": "Los Angeles — Worldwide",
+  "categoryLabels": {
+    "Commercials": "Commercials",
+    "Narrative": "Narrative",
+    "Music Videos": "Music Videos",
+    "Documentary": "Documentary"
+  },
+  "films": [
+    { "title": "Headspace", "client": "University at Buffalo – Media Study", "category": "Commercials", "role": "Directed, shot & edited", "year": "2023", "runtime": "", "video": "https://youtu.be/aqz-KE-bpKQ", "poster": "" },
+    { "title": "Days Pass Me By", "client": "JC Marcellus", "category": "Commercials", "role": "End-to-end — solo", "year": "2026", "runtime": "", "video": "", "poster": "" },
+    { "title": "Bulls Volleyball Intro Video", "client": "Buffalo Volleyball", "category": "Narrative", "role": "Directed, shot & edited", "year": "2025", "runtime": "", "video": "", "poster": "" },
+    { "title": "Bulls Track & Field Meet Promo", "client": "Buffalo TFXC", "category": "Narrative", "role": "DP & Editor", "year": "2024", "runtime": "", "video": "", "poster": "" },
+    { "title": "Punjabi Gala", "client": "Sri Lanken Student Association", "category": "Narrative", "role": "Director of Photography", "year": "2023", "runtime": "", "video": "", "poster": "" },
+    { "title": "Mock Shaadi", "client": "Indian Student Association", "category": "Narrative", "role": "Director of Photography", "year": "2023", "runtime": "", "video": "", "poster": "" }
+  ]
+}

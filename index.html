@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #0a0a0a; }
+  ::selection { background: #f5f5f3; color: #0a0a0a; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes titleIn { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  [data-tile]:hover .play-btn { opacity: 1 !important; transform: scale(1) !important; }
+  [data-tile]:hover img, [data-tile]:hover .thumb { transform: scale(1.03); }
+
+  /* ── Mobile layout: phones automatically load this adapted version ───────── */
+  @media (max-width: 768px) {
+    [data-r="home"] { height: 100svh !important; }
+    [data-r="home-top"] { padding: 17px 18px !important; }
+    [data-r="home-top"] nav { gap: 13px !important; font-size: 10px !important; }
+    [data-r="home-top"] nav [data-cta] { padding: 9px 13px !important; }
+    [data-r="home-center"] { padding: 0 22px !important; }
+    [data-r="home-center"] [data-cats] { gap: 10px 22px !important; margin-top: 30px !important; }
+    [data-r="home-bottom"] { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; padding: 22px 20px 60px !important; }
+    [data-r="hdr"] { padding: 15px 18px !important; }
+    [data-r="hdr"] nav { gap: 15px !important; font-size: 10px !important; }
+    [data-r="hdr"] [data-cta] { padding: 9px 13px !important; }
+    [data-r="work"] { padding: 30px 18px 28px !important; }
+    [data-r="work-head"] { margin-bottom: 28px !important; }
+    [data-r="filters"] { flex-wrap: nowrap !important; overflow-x: auto !important; padding-bottom: 16px !important; margin-bottom: 28px !important; -webkit-overflow-scrolling: touch; }
+    [data-r="filters"]::-webkit-scrollbar { display: none; }
+    [data-r="filters"] > * { flex: none !important; }
+    [data-r="filters"] button { padding: 11px 16px !important; }
+    [data-r="grid"] { grid-template-columns: 1fr !important; gap: 22px !important; }
+    [data-r="footer"] { flex-direction: column !important; align-items: flex-start !important; padding: 36px 20px !important; gap: 16px !important; }
+    [data-r="contact"] { grid-template-columns: 1fr !important; gap: 34px !important; padding: 30px 20px 72px !important; }
+    [data-r="watch-head"] { padding: 15px 18px !important; }
+    [data-r="watch-body"] { padding: 0 14px 18px !important; gap: 16px !important; }
+    [data-r="watch-meta"] h2 { font-size: 21px !important; }
+    [data-r="watch-related"] { padding: 14px 18px 20px !important; }
+    [data-r="fontdock"] { right: 14px !important; bottom: 14px !important; }
+  }
+</style>
+<!-- Netlify Identity: when you accept the email invite, this logs you in and bounces you to the editing dashboard at /admin/. Invisible to visitors. -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on('init', function (user) {
+      if (!user) {
+        window.netlifyIdentity.on('login', function () { document.location.href = '/admin/'; });
+      }
+    });
+  }
+</script>
+</helmet>
+
+<div style="background:#0a0a0a; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); min-height:100vh; -webkit-font-smoothing:antialiased; --font-display:{{ fontDisplay }}; --font-mono:{{ fontMono }};">
+
+  <sc-if value="{{ showHome }}" hint-placeholder-val="{{ true }}">
+    <div data-r="home" style="position:relative; height:100vh; overflow:hidden; background:#0a0a0a; animation:pageIn 0.5s cubic-bezier(0.2,0.6,0.2,1) both;">
+      <sc-for list="{{ homeSlides }}" as="s" hint-placeholder-count="1">
+        <div style="position:absolute; inset:0; background:{{ s.bg }}; opacity:{{ s.opacity }}; transition:opacity 1.4s ease;"></div>
+      </sc-for>
+      <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.25) 28%, rgba(10,10,10,0.25) 52%, rgba(10,10,10,0.92) 100%);"></div>
+      <div data-r="home-top" style="position:absolute; top:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:32px 40px;">
+        <span contentEditable="{{ admin }}" suppressContentEditableWarning="{{ true }}" onBlur="{{ saveTagline }}" onKeyDown="{{ taglineKey }}" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(245,245,243,0.7); outline:none; cursor:{{ taglineCursor }}; border-bottom:1px dashed transparent; padding-bottom:1px; transition:border-color 0.2s ease;" style-hover="border-bottom-color:{{ taglineHover }};">{{ tagline }}</span>
+        <nav style="display:flex; align-items:center; gap:24px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
+          <span onClick="{{ enter }}" style="color:#f5f5f3; cursor:pointer;" style-hover="opacity:0.65;">Work</span>
+          <span onClick="{{ goContact }}" style="color:#f5f5f3; cursor:pointer;" style-hover="opacity:0.65;">Contact</span>
+          <span data-cta="" onClick="{{ playCurrent }}" style="color:#0a0a0a; background:#f5f5f3; padding:8px 14px; border-radius:2px; cursor:pointer;" style-hover="opacity:0.85;">Showreel</span>
+        </nav>
+      </div>
+      <div data-r="home-center" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 40px; pointer-events:none;">
+        <h1 style="font-size:clamp(48px,9vw,140px); font-weight:600; line-height:0.9; letter-spacing:-0.035em; margin:0; text-wrap:balance;">Joel Marcellus</h1>
+        <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:clamp(10px,1.1vw,13px); letter-spacing:0.3em; text-transform:uppercase; color:rgba(245,245,243,0.72); margin-top:20px;">Cinematographer — Director of Photography</span>
+        <div data-cats="" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 28px; margin-top:36px; pointer-events:auto;">
+          <sc-for list="{{ homeCats }}" as="hc" hint-placeholder-count="4">
+            <span onClick="{{ hc.go }}" style="font-size:clamp(16px,1.9vw,23px); font-weight:500; letter-spacing:-0.01em; color:rgba(245,245,243,0.82); cursor:pointer; transition:color 0.2s ease;" style-hover="color:#f5f5f3;">{{ hc.name }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div data-r="home-bottom" style="position:absolute; left:0; right:0; bottom:0; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:40px 40px 84px;">
+        {{ homeNowEl }}
+        <span onClick="{{ enter }}" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(245,245,243,0.78); cursor:pointer; white-space:nowrap;" style-hover="color:#f5f5f3;">View all work ↗</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
+  <header data-r="hdr" style="position:sticky; top:0; z-index:50; display:flex; align-items:baseline; justify-content:space-between; padding:24px 40px; background:rgba(10,10,10,0.72); backdrop-filter:blur(16px); border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div onClick="{{ goHome }}" style="display:flex; flex-direction:column; gap:2px; cursor:pointer;">
+      <span style="font-size:17px; font-weight:600; letter-spacing:0.01em;">Joel Marcellus</span>
+      <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7d7d78;">Cinematographer — DP</span>
+    </div>
+    <nav style="display:flex; align-items:center; gap:26px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
+      <span onClick="{{ goWork }}" style="color:{{ workColor }}; cursor:pointer;" style-hover="color:#f5f5f3;">Work</span>
+      <span onClick="{{ goContact }}" style="color:{{ contactColor }}; cursor:pointer;" style-hover="color:#f5f5f3;">Contact</span>
+      <sc-if value="{{ admin }}" hint-placeholder-val="{{ false }}">
+        <span onClick="{{ toggleEdit }}" style="color:#7d7d78; cursor:pointer;" style-hover="color:#f5f5f3;">{{ editLabel }}</span>
+        <span onClick="{{ exitAdmin }}" title="Return to the public view" style="color:#56564f; cursor:pointer;" style-hover="color:#f5f5f3;">Exit admin</span>
+      </sc-if>
+      <span data-cta="" onClick="{{ openReel }}" style="color:#0a0a0a; background:#f5f5f3; padding:8px 14px; border-radius:2px; cursor:pointer;" style-hover="opacity:0.85;">Showreel</span>
+    </nav>
+  </header>
+  </sc-if>
+
+  <sc-if value="{{ showWork }}" hint-placeholder-val="{{ true }}">
+  <section data-r="work" style="padding:64px 40px 40px; max-width:1500px; margin:0 auto; animation:pageIn 0.5s cubic-bezier(0.2,0.6,0.2,1) both;">
+    <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:28px; padding:14px 18px; border:1px solid rgba(245,245,243,0.16); border-radius:3px; background:rgba(245,245,243,0.03);">
+        <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9a9a93;">Upload mode</span>
+        <span style="font-size:13.5px; color:#9a9a93;">Drag a still or video onto any tile, or browse / paste a link — titles &amp; runtimes sync from the video automatically (or hit ⟳ Sync any time). Edit every field on the card, add new films with the + tile, and delete the ones you add. Saves automatically.</span>
+      </div>
+    </sc-if>
+    <div data-r="work-head" style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:40px;">
+      <h1 style="font-size:clamp(34px,5vw,64px); font-weight:500; line-height:1.02; letter-spacing:-0.02em; margin:0; max-width:14ch; text-wrap:balance;">Selected work, frame by frame.</h1>
+      <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; color:#7d7d78;">{{ countLabel }}</span>
+    </div>
+
+    <div data-r="filters" style="display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:20px; margin-bottom:40px;">
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+        <sc-if value="{{ c.showButton }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ c.select }}" style="background:{{ c.bg }}; color:{{ c.color }}; border:1px solid {{ c.border }}; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:9px 16px; border-radius:2px; cursor:pointer; transition:all 0.18s ease;">{{ c.name }}</button>
+        </sc-if>
+        <sc-if value="{{ c.showInput }}" hint-placeholder-val="{{ false }}">
+          <input type="text" value="{{ c.label }}" onChange="{{ c.setLabel }}" placeholder="Tab name" style="background:rgba(245,245,243,0.05); color:#f5f5f3; border:1px dashed rgba(245,245,243,0.4); font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:9px 14px; border-radius:2px; outline:none; width:13ch;" style-focus="border-color:rgba(245,245,243,0.7); border-style:solid;">
+        </sc-if>
+      </sc-for>
+    </div>
+
+    <div data-r="grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(440px, 1fr)); gap:28px 28px;">
+      <sc-for list="{{ items }}" as="p" hint-placeholder-count="6">
+        <div onClick="{{ p.open }}" onDrop="{{ p.onDrop }}" onDragOver="{{ p.onDragOver }}" data-tile="" style="cursor:pointer;">
+          <div class="thumb" style="position:relative; aspect-ratio:16/9; border-radius:3px; overflow:hidden; background:{{ p.thumbBg }}; transition:transform 0.4s cubic-bezier(0.2,0.6,0.2,1);">
+            <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);"></div>
+            <div style="position:absolute; inset:0; background:rgba(10,10,10,0); transition:background 0.3s ease; display:flex; align-items:center; justify-content:center;" style-hover="background:rgba(10,10,10,0.35);">
+              <div style="width:58px; height:58px; border-radius:50%; border:1px solid rgba(255,255,255,0.7); display:flex; align-items:center; justify-content:center; opacity:0; transform:scale(0.85); transition:all 0.3s ease; backdrop-filter:blur(2px);" class="play-btn">
+                <div style="width:0; height:0; border-style:solid; border-width:8px 0 8px 13px; border-color:transparent transparent transparent #fff; margin-left:3px;"></div>
+              </div>
+            </div>
+            <span style="position:absolute; top:14px; left:14px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,245,243,0.85); background:rgba(10,10,10,0.4); padding:4px 8px; border-radius:2px; backdrop-filter:blur(4px);">{{ p.categoryLabel }}</span>
+            <span style="position:absolute; bottom:14px; right:14px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.08em; color:rgba(245,245,243,0.7);">{{ p.runtime }}</span>
+            <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ p.stop }}" style="position:absolute; inset:0; z-index:6; background:linear-gradient(rgba(8,8,8,0.42), rgba(8,8,8,0.68)); backdrop-filter:blur(1px); border:1.5px dashed rgba(245,245,243,0.4); border-radius:3px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:18px; text-align:center;">
+                <sc-if value="{{ p.hasThumb }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#9be8b0;">✓ Thumbnail set — drop a new file to replace</span>
+                </sc-if>
+                <sc-if value="{{ p.noThumbYet }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(245,245,243,0.6);">Drag a file, or</span>
+                </sc-if>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center;">
+                  <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:#0a0a0a; background:#f5f5f3; padding:9px 14px; border-radius:2px; cursor:pointer;" style-hover="opacity:0.85;">
+                    Upload video
+                    <input type="file" accept="video/*,.mov,.mp4,.webm,.m4v,.qt" onChange="{{ p.onPick }}" style="display:none;">
+                  </label>
+                  <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:#f5f5f3; background:transparent; border:1px solid rgba(245,245,243,0.45); padding:8px 13px; border-radius:2px; cursor:pointer;" style-hover="background:rgba(245,245,243,0.1);">
+                    Upload still
+                    <input type="file" accept="image/*" onChange="{{ p.onPick }}" style="display:none;">
+                  </label>
+                </div>
+                <input type="text" placeholder="or paste Vimeo / YouTube / .mp4 link" defaultValue="{{ p.urlVal }}" onBlur="{{ p.onUrl }}" onKeyDown="{{ p.onUrlKey }}" style="width:100%; max-width:300px; background:rgba(245,245,243,0.06); border:1px solid rgba(245,245,243,0.18); border-radius:2px; color:#f5f5f3; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; padding:8px 10px; text-align:center; outline:none;">
+                <sc-if value="{{ p.hasThumb }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ p.clearThumb }}" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(245,245,243,0.55); cursor:pointer; text-decoration:underline;" style-hover="color:#f5f5f3;">Reset thumbnail</span>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ p.notEditing }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-top:14px;">
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <span style="font-size:18px; font-weight:500; letter-spacing:-0.01em;">{{ p.title }}</span>
+                <span style="font-size:13.5px; color:#7d7d78;">{{ p.client }}</span>
+              </div>
+              <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:#56564f;">{{ p.year }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ p.stop }}" style="display:flex; flex-direction:column; gap:7px; margin-top:14px;">
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:8.5px; letter-spacing:0.14em; text-transform:uppercase; color:#56564f; flex:none;">Title</span>
+                <input type="text" value="{{ p.title }}" onChange="{{ p.setTitle }}" placeholder="Untitled" style="flex:1; min-width:0; background:rgba(245,245,243,0.05); border:1px solid rgba(245,245,243,0.16); border-radius:2px; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:17px; font-weight:500; letter-spacing:-0.01em; padding:9px 11px; outline:none;" style-focus="border-color:rgba(245,245,243,0.5);">
+              </div>
+              <div style="display:flex; gap:7px;">
+                <input type="text" value="{{ p.client }}" onChange="{{ p.setClient }}" placeholder="Client" style="flex:1; min-width:0; background:rgba(245,245,243,0.05); border:1px solid rgba(245,245,243,0.16); border-radius:2px; color:#cfcfca; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:13.5px; padding:8px 10px; outline:none;" style-focus="border-color:rgba(245,245,243,0.5);">
+                <input type="text" value="{{ p.year }}" onChange="{{ p.setYear }}" placeholder="Year" style="width:62px; flex:none; background:rgba(245,245,243,0.05); border:1px solid rgba(245,245,243,0.16); border-radius:2px; color:#cfcfca; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:12px; text-align:center; padding:8px 6px; outline:none;" style-focus="border-color:rgba(245,245,243,0.5);">
+              </div>
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:8.5px; letter-spacing:0.14em; text-transform:uppercase; color:#56564f; flex:none;">Role</span>
+                <input type="text" value="{{ p.role }}" onChange="{{ p.setRole }}" list="fp-role-suggest" placeholder="Your role on this film" style="flex:1; min-width:0; background:rgba(245,245,243,0.05); border:1px solid rgba(245,245,243,0.16); border-radius:2px; color:#cfcfca; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:13.5px; padding:8px 10px; outline:none;" style-focus="border-color:rgba(245,245,243,0.5);">
+                <datalist id="fp-role-suggest">
+                  <option value="Director of Photography"></option>
+                  <option value="Cinematographer"></option>
+                  <option value="Director / DP"></option>
+                  <option value="Editor"></option>
+                  <option value="DP & Editor"></option>
+                  <option value="Written, shot & edited"></option>
+                  <option value="Directed, shot & edited"></option>
+                  <option value="End-to-end — solo"></option>
+                </datalist>
+              </div>
+              <select value="{{ p.category }}" onChange="{{ p.setCategory }}" style="background:rgba(245,245,243,0.05); border:1px solid rgba(245,245,243,0.16); border-radius:2px; color:#cfcfca; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; padding:8px 10px; outline:none; appearance:none; cursor:pointer;" style-focus="border-color:rgba(245,245,243,0.5);">
+                <sc-for list="{{ p.catOptions }}" as="co" hint-placeholder-count="4">
+                  <option value="{{ co.value }}" style="background:#101010;">{{ co.label }}</option>
+                </sc-for>
+              </select>
+              <div style="display:flex; align-items:center; gap:12px; margin-top:1px;">
+                <sc-if value="{{ p.canSync }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ p.syncTitle }}" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(245,245,243,0.6); cursor:pointer;" style-hover="color:#f5f5f3;">⟳ Sync title &amp; runtime from video</span>
+                </sc-if>
+                <span style="flex:1;"></span>
+                <sc-if value="{{ p.isAdded }}" hint-placeholder-val="{{ false }}">
+                  <span onClick="{{ p.remove }}" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,138,138,0.72); cursor:pointer;" style-hover="color:#ff8a8a;">Delete film</span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+      <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ addFilm }}" style="cursor:pointer; align-self:start;">
+          <div style="position:relative; aspect-ratio:16/9; border-radius:3px; border:1.5px dashed rgba(245,245,243,0.22); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px; background:rgba(245,245,243,0.02); transition:all 0.2s ease;" style-hover="border-color:rgba(245,245,243,0.5); background:rgba(245,245,243,0.05);">
+            <div style="width:46px; height:46px; border-radius:50%; border:1px solid rgba(245,245,243,0.4); display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:300; line-height:1; color:#f5f5f3;">+</div>
+            <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9a9a93;">Add a film {{ addCatLabel }}</span>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <footer data-r="footer" style="border-top:1px solid rgba(255,255,255,0.08); margin-top:48px; padding:48px 40px; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <span style="font-size:24px; font-weight:500; letter-spacing:-0.01em;">Let's make something.</span>
+      <a href="#" style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:12px; letter-spacing:0.06em; color:#7d7d78; text-decoration:none;" style-hover="color:#f5f5f3;">hello@jordanvale.com</a>
+    </div>
+    <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#56564f;">© 2026 — Based in Los Angeles</span>
+  </footer>
+  </sc-if>
+
+  <sc-if value="{{ showContact }}" hint-placeholder-val="{{ false }}">
+    <section data-r="contact" style="max-width:1500px; margin:0 auto; padding:80px 40px 100px; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; animation:pageIn 0.5s cubic-bezier(0.2,0.6,0.2,1) both;">
+      <div style="display:flex; flex-direction:column; gap:36px;">
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7d7d78;">Contact</span>
+          <h1 style="font-size:clamp(40px,5vw,72px); font-weight:500; line-height:1.0; letter-spacing:-0.02em; margin:0; max-width:12ch; text-wrap:balance;">Let's make something worth watching.</h1>
+          <p style="font-size:16px; line-height:1.6; color:#9a9a93; max-width:42ch; margin:0;">Available for commercials, narrative, music videos and documentary work — on location or in studio. Reach out with a logline, a deck, or just an idea.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:18px; border-top:1px solid rgba(255,255,255,0.08); padding-top:28px;">
+          <a href="mailto:hello@joelmarcellus.com" style="font-size:20px; font-weight:500; color:#f5f5f3; text-decoration:none;" style-hover="color:#9a9a93;">hello@joelmarcellus.com</a>
+          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:13px; color:#9a9a93;">+1 (323) 555 0147</span>
+          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:13px; color:#9a9a93;">Los Angeles, CA — repped worldwide</span>
+          <div style="display:flex; gap:18px; margin-top:8px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase;">
+            <a href="#" style="color:#7d7d78; text-decoration:none;" style-hover="color:#f5f5f3;">Instagram</a>
+            <a href="#" style="color:#7d7d78; text-decoration:none;" style-hover="color:#f5f5f3;">Vimeo</a>
+            <a href="#" style="color:#7d7d78; text-decoration:none;" style-hover="color:#f5f5f3;">IMDb</a>
+          </div>
+        </div>
+      </div>
+      <form onSubmit="{{ submitContact }}" style="display:flex; flex-direction:column; gap:20px; background:rgba(245,245,243,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:4px; padding:36px;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#7d7d78;">Name</label>
+          <input name="name" type="text" required="" placeholder="Your name" style="background:rgba(245,245,243,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:2px; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:15px; padding:12px 14px; outline:none;" style-focus="border-color:rgba(245,245,243,0.45);">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#7d7d78;">Email</label>
+          <input name="email" type="email" required="" placeholder="you@studio.com" style="background:rgba(245,245,243,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:2px; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:15px; padding:12px 14px; outline:none;" style-focus="border-color:rgba(245,245,243,0.45);">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#7d7d78;">Project type</label>
+          <select name="ptype" style="background:rgba(245,245,243,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:2px; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:15px; padding:12px 14px; outline:none; appearance:none;" style-focus="border-color:rgba(245,245,243,0.45);">
+            <option style="background:#0a0a0a;">Commercial</option>
+            <option style="background:#0a0a0a;">Narrative / Film</option>
+            <option style="background:#0a0a0a;">Music Video</option>
+            <option style="background:#0a0a0a;">Documentary</option>
+            <option style="background:#0a0a0a;">Other</option>
+          </select>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#7d7d78;">Message</label>
+          <textarea name="message" rows="4" placeholder="Tell me about the project, dates, and budget range." style="background:rgba(245,245,243,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:2px; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:15px; padding:12px 14px; outline:none; resize:vertical;" style-focus="border-color:rgba(245,245,243,0.45);"></textarea>
+        </div>
+        <button type="submit" style="margin-top:4px; background:#f5f5f3; color:#0a0a0a; border:none; border-radius:2px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; padding:14px; cursor:pointer;" style-hover="opacity:0.85;">Send enquiry →</button>
+      </form>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ close }}" style="position:fixed; inset:0; z-index:100; background:rgba(6,6,6,0.94); backdrop-filter:blur(8px); display:flex; flex-direction:column; animation:fadeIn 0.25s ease both;">
+      <div data-r="watch-head" style="display:flex; align-items:center; justify-content:space-between; padding:24px 32px; flex:none;">
+        <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#7d7d78;">{{ current.categoryLabel }} — {{ current.year }}</span>
+        <button onClick="{{ close }}" style="background:none; border:1px solid rgba(255,255,255,0.18); color:#f5f5f3; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:18px; line-height:1; display:flex; align-items:center; justify-content:center;" style-hover="background:rgba(255,255,255,0.08);">✕</button>
+      </div>
+      <div onClick="{{ stop }}" data-r="watch-body" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 32px 32px; gap:24px; min-height:0;">
+        <div ref="{{ playerRef }}" onClick="{{ stop }}" style="{{ playerStyle }}">
+          <sc-if value="{{ expanded }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ goFullscreen }}" title="Exit fullscreen" style="position:absolute; top:18px; right:18px; z-index:10; display:flex; align-items:center; gap:9px; height:42px; padding:0 17px; border-radius:8px; border:1px solid rgba(255,255,255,0.25); background:rgba(10,10,10,0.6); backdrop-filter:blur(8px); color:#f5f5f3; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer;" style-hover="background:rgba(10,10,10,0.85); border-color:rgba(255,255,255,0.5);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"></path></svg>
+              Exit fullscreen
+            </button>
+          </sc-if>
+          <sc-if value="{{ current.embed }}" hint-placeholder-val="{{ false }}">
+            <iframe src="{{ current.embed }}" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute; inset:0; width:100%; height:100%; border:0;" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen=""></iframe>
+          </sc-if>
+          <sc-if value="{{ current.mp4 }}" hint-placeholder-val="{{ false }}">
+            <video src="{{ current.mp4 }}" controls="{{ true }}" autoplay="{{ true }}" playsinline="{{ true }}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000;"></video>
+          </sc-if>
+          <sc-if value="{{ current.noVideo }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; gap:18px; align-items:center; justify-content:center;">
+              <div style="width:80px; height:80px; border-radius:50%; background:rgba(245,245,243,0.95); display:flex; align-items:center; justify-content:center;">
+                <div style="width:0; height:0; border-style:solid; border-width:11px 0 11px 18px; border-color:transparent transparent transparent #0a0a0a; margin-left:4px;"></div>
+              </div>
+              <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(245,245,243,0.5);">Add a video link in the code</span>
+            </div>
+            <div style="position:absolute; left:0; right:0; bottom:0; padding:0 20px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:rgba(245,245,243,0.85);">0:00</span>
+              <div style="flex:1; height:3px; background:rgba(255,255,255,0.22); border-radius:2px;"><div style="width:0%; height:100%; background:#f5f5f3; border-radius:2px;"></div></div>
+              <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; color:rgba(245,245,243,0.85);">{{ current.runtime }}</span>
+            </div>
+          </sc-if>
+        </div>
+        <div data-r="watch-meta" style="width:min(1100px,100%); display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <h2 style="font-size:28px; font-weight:500; letter-spacing:-0.01em; margin:0;">{{ current.title }}</h2>
+            <span style="font-size:14px; color:#7d7d78;">{{ current.client }} · {{ current.role }}</span>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <sc-if value="{{ current.hasVideo }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ goFullscreen }}" title="{{ fsLabel }}" style="background:none; border:1px solid rgba(255,255,255,0.18); color:#f5f5f3; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:11px 16px; border-radius:2px; cursor:pointer; display:flex; align-items:center; gap:9px;" style-hover="background:rgba(255,255,255,0.08);">
+                <sc-if value="{{ expanded }}" hint-placeholder-val="{{ false }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"></path></svg>
+                </sc-if>
+                <sc-if value="{{ collapsedView }}" hint-placeholder-val="{{ true }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"></path></svg>
+                </sc-if>
+                {{ fsLabel }}
+              </button>
+            </sc-if>
+            <button onClick="{{ prev }}" style="background:none; border:1px solid rgba(255,255,255,0.18); color:#f5f5f3; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:11px 18px; border-radius:2px; cursor:pointer;" style-hover="background:rgba(255,255,255,0.08);">← Prev</button>
+            <button onClick="{{ next }}" style="background:none; border:1px solid rgba(255,255,255,0.18); color:#f5f5f3; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:11px 18px; border-radius:2px; cursor:pointer;" style-hover="background:rgba(255,255,255,0.08);">Next →</button>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ hasRelated }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ stop }}" data-r="watch-related" style="flex:none; border-top:1px solid rgba(255,255,255,0.08); padding:16px 32px 22px;">
+          <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#7d7d78;">More in {{ current.categoryLabel }}</span>
+          <div style="display:flex; gap:14px; overflow-x:auto; margin-top:12px; padding-bottom:4px;">
+            <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+              <div onClick="{{ r.go }}" data-tile="" style="flex:none; width:186px; cursor:pointer;">
+                <div class="thumb" style="position:relative; aspect-ratio:16/9; border-radius:2px; overflow:hidden; background:{{ r.thumbBg }}; transition:transform 0.3s ease;">
+                  <div style="position:absolute; inset:0; background:rgba(10,10,10,0); transition:background 0.25s ease;" style-hover="background:rgba(10,10,10,0.25);"></div>
+                  <span style="position:absolute; bottom:8px; right:9px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:9px; letter-spacing:0.06em; color:rgba(245,245,243,0.75);">{{ r.runtime }}</span>
+                </div>
+                <div style="margin-top:8px; font-size:13px; font-weight:500; letter-spacing:-0.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.title }}</div>
+                <div style="font-size:11.5px; color:#7d7d78; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.client }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ admin }}" hint-placeholder-val="{{ false }}">
+  <div data-r="fontdock" style="position:fixed; right:20px; bottom:20px; z-index:120; display:flex; flex-direction:column; align-items:flex-end; gap:8px; font-family:var(--font-mono, 'JetBrains Mono', monospace);">
+    <sc-if value="{{ fontOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; gap:2px; background:rgba(16,16,16,0.94); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px; min-width:168px; box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+        <span style="font-size:9.5px; letter-spacing:0.14em; text-transform:uppercase; color:#6a6a64; padding:6px 10px 4px;">Typeface</span>
+        <sc-for list="{{ fontList }}" as="ft" hint-placeholder-count="4">
+          <span onClick="{{ ft.set }}" style="display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 11px; border-radius:5px; cursor:pointer; background:{{ ft.bg }};" style-hover="background:rgba(255,255,255,0.06);">
+            <span style="font-family:{{ ft.preview }}; font-size:15px; color:{{ ft.color }};">{{ ft.label }}</span>
+            <span style="font-family:{{ ft.preview }}; font-size:14px; color:{{ ft.color }};">Aa</span>
+          </span>
+        </sc-for>
+      </div>
+    </sc-if>
+    <span onClick="{{ toggleFont }}" style="display:flex; align-items:center; gap:9px; background:rgba(16,16,16,0.94); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.14); border-radius:999px; padding:9px 15px; cursor:pointer; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#f5f5f3;" style-hover="border-color:rgba(255,255,255,0.32);">
+      <span style="font-size:15px; line-height:1;">Aa</span>{{ fontLabel }}
+    </span>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { cat: 'All', open: false, idx: 0, page: 'home', editing: false, overrides: {}, thumbs: {}, durations: {}, slide: 0, font: 0, fontOpen: false, added: [], catLabels: {}, thumbKinds: {}, expanded: false, siteText: {}, admin: false, content: null };
+
+  // ── Published content (the source of truth every visitor sees) ───────────
+  // films / category labels / tagline live in content/site.json, committed to
+  // the repo. Decap CMS edits that file → Netlify redeploys → live. The baked
+  // `projects` array below is only a fallback for opening the file with no
+  // server (file://), where fetch can't reach the JSON.
+  loadContent() {
+    fetch('content/site.json', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(c => { if (c && Array.isArray(c.films)) this.setState({ content: c }, () => this.resolveMeta()); })
+      .catch(() => {});
+  }
+  _attempted = new Set();
+  _titleSync = new Set();   // keys whose title should be pulled from the (new) embedded source
+
+  fonts = [
+    { label: 'Grotesk',   display: "'Schibsted Grotesk', sans-serif", mono: "'JetBrains Mono', monospace" },
+    { label: 'Space',     display: "'Space Grotesk', sans-serif",     mono: "'Space Mono', monospace" },
+    { label: 'Archivo',   display: "'Archivo', sans-serif",           mono: "'IBM Plex Mono', monospace" },
+    { label: 'Editorial', display: "'Newsreader', serif",             mono: "'JetBrains Mono', monospace" },
+  ];
+  setFont(i) { this.setState({ font: i, fontOpen: false }); try { localStorage.setItem('filmportfolio:font', String(i)); } catch (e) {} }
+
+  // ── Private admin gate ──────────────────────────────────────────────────
+  // Visitors get a clean site (no Edit button, no font switcher).
+  // You enter editing mode by visiting your URL with ?admin once — it sticks
+  // on that browser. Append ?public (or click "Exit") to preview as a visitor.
+  detectAdmin() {
+    try {
+      const href = String(location.href);
+      if (/[?#&](public|exit|visitor)\b/i.test(href)) { localStorage.removeItem('filmportfolio:admin'); return false; }
+      if (/[?#&]admin\b/i.test(href)) { localStorage.setItem('filmportfolio:admin', '1'); return true; }
+      return localStorage.getItem('filmportfolio:admin') === '1';
+    } catch (e) { return false; }
+  }
+  exitAdmin() { try { localStorage.removeItem('filmportfolio:admin'); } catch (e) {} this.setState({ admin: false, editing: false, fontOpen: false }); }
+  loadFont() { try { const v = parseInt(localStorage.getItem('filmportfolio:font'), 10); return isNaN(v) ? 0 : v; } catch (e) { return 0; } }
+
+  // ── HOW TO ADD YOUR WORK ──────────────────────────────────────────────
+  //  video:  a Vimeo / YouTube link  OR  a path to an uploaded .mp4
+  //          e.g.  'https://vimeo.com/123456789'
+  //                'https://youtu.be/aqz-KE-bpKQ'
+  //                'videos/my-reel.mp4'   (upload the file, then point here)
+  //          leave '' to keep the placeholder.
+  //  poster: an image shown on the grid tile (a still from the film)
+  //          e.g. 'posters/nocturne.jpg'  — leave '' to keep the gradient.
+  // ──────────────────────────────────────────────────────────────────────
+  projects = [
+    { title: 'Nocturne', client: 'Aether Audio', category: 'Commercials', role: 'Director of Photography', year: '2025', runtime: '1:24', video: 'https://youtu.be/aqz-KE-bpKQ', poster: '', bg: 'linear-gradient(135deg,#1b2a3a 0%,#0e1620 55%,#06243a 100%)' },
+    { title: 'Salt & Smoke', client: 'Marrow Restaurant Group', category: 'Commercials', role: 'Cinematographer', year: '2025', runtime: '0:58', video: '', poster: '', bg: 'linear-gradient(135deg,#3a2417 0%,#1c1109 60%,#4a2c14 100%)' },
+    { title: 'The Long Field', client: 'A24 (Spec)', category: 'Narrative', role: 'Director of Photography', year: '2024', runtime: '11:40', video: '', poster: '', bg: 'linear-gradient(135deg,#26331f 0%,#10160c 55%,#3a4a26 100%)' },
+    { title: 'Half Light', client: 'Independent Short', category: 'Narrative', role: 'Cinematographer', year: '2024', runtime: '8:12', video: '', poster: '', bg: 'linear-gradient(135deg,#2b1f33 0%,#130d18 55%,#3d2247 100%)' },
+    { title: 'Undertow', client: 'Meridian Records', category: 'Music Videos', role: 'Director / DP', year: '2025', runtime: '3:46', video: '', poster: '', bg: 'linear-gradient(135deg,#0e2a2e 0%,#06181a 55%,#0a3a3f 100%)' },
+    { title: 'Paper Cranes', client: 'Lena Hart', category: 'Music Videos', role: 'Cinematographer', year: '2024', runtime: '4:02', video: '', poster: '', bg: 'linear-gradient(135deg,#3a1320 0%,#1a0810 55%,#4d1828 100%)' },
+    { title: 'Ridgeline', client: 'Patagonia (Spec)', category: 'Documentary', role: 'Director of Photography', year: '2025', runtime: '6:31', video: '', poster: '', bg: 'linear-gradient(135deg,#2c3340 0%,#141820 55%,#3b4452 100%)' },
+    { title: 'The Makers', client: 'Field Notes Co.', category: 'Documentary', role: 'Cinematographer', year: '2023', runtime: '14:08', video: '', poster: '', bg: 'linear-gradient(135deg,#3a3320 0%,#1a160c 55%,#4d4520 100%)' },
+    { title: 'Velvet Hour', client: 'Maison Clé', category: 'Commercials', role: 'Director of Photography', year: '2024', runtime: '1:10', video: '', poster: '', bg: 'linear-gradient(135deg,#2a1530 0%,#140a18 55%,#1a0e3a 100%)' },
+    { title: 'Static Bloom', client: 'Hollow Coast', category: 'Music Videos', role: 'Cinematographer', year: '2023', runtime: '3:28', video: '', poster: '', bg: 'linear-gradient(135deg,#10202c 0%,#081218 55%,#163a4a 100%)' },
+  ];
+
+  resolveMedia(url) {
+    if (!url) return { embed: '', mp4: '' };
+    const u = String(url).trim();
+    if (this.isFileSrc(u)) return { embed: '', mp4: u };
+    let m;
+    if (m = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{6,})/)) return { embed: `https://www.youtube-nocookie.com/embed/${m[1]}?rel=0&modestbranding=1&playsinline=1&autoplay=1`, mp4: '' };
+    if (m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/)) return { embed: `https://player.vimeo.com/video/${m[1]}?autoplay=1`, mp4: '' };
+    return { embed: u, mp4: '' };
+  }
+
+  // ── thumbnails: derive from the actual video where possible ─────────────
+  ytId(url) { const m = String(url || '').match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{6,})/); return m ? m[1] : null; }
+  vimeoId(url) { const m = String(url || '').match(/vimeo\.com\/(?:video\/)?(\d+)/); return m ? m[1] : null; }
+  isFileSrc(url) {
+    const u = String(url || '');
+    return /^data:video\//i.test(u) || /^blob:/i.test(u) || /\.(mp4|webm|ogg|mov|m4v|qt)(\?|#|$)/i.test(u);
+  }
+
+  // Thumbnail precedence is source-aware so a stale auto-frame can't shadow a freshly-pasted embed:
+  //   1. an explicit user-uploaded still ('poster') always wins
+  //   2. an embed (YouTube / Vimeo) shows its platform poster — never an old captured frame
+  //   3. otherwise (local file / no video) use whatever image we have
+  thumbUrl(p) {
+    const kinds = this.state.thumbKinds || {};
+    const t = (this.state.thumbs || {})[p._key];
+    const kind = kinds[p._key];
+    const yt = this.ytId(p.video), vim = this.vimeoId(p.video);
+    const isEmbed = !!(yt || vim);
+    if (t && kind === 'poster') return t;                           // explicit still — wins everywhere
+    if (isEmbed) {
+      if (t && kind === 'remote') return t;                         // resolved maxres / vimeo poster
+      if (yt) return `https://i.ytimg.com/vi/${yt}/hqdefault.jpg`;   // instant YT fallback until maxres resolves
+      return null;                                                  // vimeo: gradient until poster resolves (ignore stale frame)
+    }
+    if (t) return t;                                                // local file frame or still
+    if (p.poster) return p.poster;                                  // legacy uploaded still (pre-IndexedDB)
+    return null;
+  }
+
+  // Load the first URL that yields a real image (YouTube/Vimeo return tiny 120px placeholders
+  // when a size is missing — reject those). No CORS needed: <img> loads, never reads pixels.
+  loadBestImage(urls) {
+    return new Promise(resolve => {
+      let i = 0;
+      const next = () => {
+        if (i >= urls.length) return resolve(null);
+        const url = urls[i++];
+        const img = new Image();
+        let settled = false;
+        const ok = () => { if (settled) return; settled = true; (img.naturalWidth > 120 ? resolve(url) : next()); };
+        const bad = () => { if (settled) return; settled = true; next(); };
+        img.onload = ok; img.onerror = bad;
+        img.src = url;
+        setTimeout(() => { if (!settled) { settled = true; next(); } }, 6000);
+      };
+      next();
+    });
+  }
+  thumbBg(p) { const t = this.thumbUrl(p); return t ? `url("${t}") center/cover no-repeat` : p.bg; }
+
+  // remote poster URLs (YouTube / Vimeo) are tiny strings — safe in localStorage
+  setRemoteThumb(key, url) {
+    this.idbDeleteImage(key);   // drop any stale captured frame so it can't shadow the platform poster
+    this.setState(s => {
+      const m = this.loadThumbUrls(); m[key] = url; this.persistThumbUrls(m);
+      const k = { ...s.thumbKinds, [key]: 'remote' }; this.persistThumbKinds(k);
+      return { thumbs: { ...s.thumbs, [key]: url }, thumbKinds: k };
+    });
+  }
+  // captured frames & uploaded stills are large blobs — they live in IndexedDB, never localStorage.
+  // kind: 'poster' = explicit user still (always wins); 'frame' = auto grab from a local video file
+  async setImageThumb(key, blob, kind) {
+    try { await this.idbPutImage(key, blob); } catch (e) {}
+    const url = URL.createObjectURL(blob);
+    this.setState(s => {
+      const m = this.loadThumbUrls(); delete m[key]; this.persistThumbUrls(m);
+      const k = { ...s.thumbKinds, [key]: kind || 'poster' }; this.persistThumbKinds(k);
+      return { thumbs: { ...s.thumbs, [key]: url }, thumbKinds: k };
+    });
+  }
+  setDuration(title, secs) { this.setState(s => { const durations = { ...s.durations, [title]: Math.round(secs) }; this.persistDurations(durations); return { durations }; }); }
+  persistDurations(d) { try { localStorage.setItem('filmportfolio:durations', JSON.stringify(d)); } catch (e) {} }
+  loadDurations() { try { return JSON.parse(localStorage.getItem('filmportfolio:durations') || '{}'); } catch (e) { return {}; } }
+  formatDur(s) { s = Math.round(s); if (!isFinite(s) || s <= 0) return null; const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : String(m)) + ':' + String(sec).padStart(2, '0'); }
+  runtimeFor(p) { const d = (this.state.durations || {})[p._key || p.title]; return (d && this.formatDur(d)) || p.runtime; }
+  forgetAttempts(title) { for (const a of [...this._attempted]) if (a.indexOf(title + '::') !== -1) this._attempted.delete(a); }
+
+  // Resolve real thumbnails AND exact durations from each source.
+  async resolveMeta() {
+    for (const p of this.effective()) {
+      const key = p._key;
+      const v = p.video || '';
+      const yt = this.ytId(v), vim = this.vimeoId(v), file = this.isFileSrc(v);
+      if (!yt && !vim && !file) continue;
+      const thumbs = this.state.thumbs || {}, durs = this.state.durations || {}, kinds = this.state.thumbKinds || {};
+      const kind = kinds[key], isEmbed = !!(yt || vim);
+      // embeds must (re)resolve their platform poster unless the user set an explicit still;
+      // a stale 'frame' from a previous local upload should NOT count as a usable thumbnail.
+      const needThumb = !p.poster && kind !== 'poster' && (isEmbed ? kind !== 'remote' : !thumbs[key]);
+      const needDur = !durs[key];
+      const needTitle = this._titleSync.has(key);    // only set right after the user swaps in a new link
+      if (!needThumb && !needDur && !needTitle) continue;
+      const akey = 'm:' + key + '::' + v;
+      if (this._attempted.has(akey)) { this._titleSync.delete(key); continue; }
+      this._attempted.add(akey);
+      try {
+        if (yt) {
+          // crisp 16:9 poster — maxres when the upload has it, else SD/HQ
+          if (needThumb) { const t = await this.loadBestImage([`https://i.ytimg.com/vi/${yt}/maxresdefault.jpg`, `https://i.ytimg.com/vi/${yt}/sddefault.jpg`, `https://i.ytimg.com/vi/${yt}/hqdefault.jpg`]); if (t) this.setRemoteThumb(key, t); }
+          if (needDur || needTitle) { const m = await this.ytMeta(yt); if (needDur && m.duration) this.setDuration(key, m.duration); if (needTitle && m.title) this.saveOverride(key, { title: m.title }); }
+        } else if (vim) {
+          // Vimeo's oembed JSON is no longer reachable cross-origin — pull the poster as an
+          // image (vumbnail mirrors Vimeo's CDN) and the exact duration + title via the Player API.
+          if (needThumb) { const t = await this.loadBestImage([`https://vumbnail.com/${vim}_large.jpg`, `https://vumbnail.com/${vim}.jpg`]); if (t) this.setRemoteThumb(key, t); }
+          if (needDur || needTitle) { const m = await this.vimeoMeta(vim); if (needDur && m.duration) this.setDuration(key, m.duration); if (needTitle && m.title) this.saveOverride(key, { title: m.title }); }
+        } else if (file) {
+          const r = await this.captureFrame(v);
+          if (needThumb && r.blob) this.setImageThumb(key, r.blob, 'frame');
+          if (needDur && r.duration) this.setDuration(key, r.duration);
+        }
+      } catch (e) {}
+      this._titleSync.delete(key);
+    }
+  }
+
+  // Robust frame grab: attach to DOM, force a decode (play/pause), seek, then draw.
+  // Returns { thumb, duration }. Works for mp4/mov/webm blobs, data URLs and CORS-enabled http.
+  captureFrame(url) {
+    return new Promise((resolve) => {
+      const v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.playsInline = true; v.preload = 'auto';
+      if (/^https?:/i.test(url)) v.crossOrigin = 'anonymous';   // only needed (and safe) for remote URLs
+      v.style.cssText = 'position:fixed;left:-10000px;top:0;width:4px;height:4px;opacity:0;pointer-events:none;';
+      document.body.appendChild(v);
+      let done = false, duration = 0;
+      const cleanup = () => { try { v.pause(); v.removeAttribute('src'); v.load(); v.remove(); } catch (e) {} };
+      const fin = (blob) => { if (done) return; done = true; cleanup(); resolve({ blob: blob || null, duration }); };
+      const draw = () => {
+        if (done || !v.videoWidth) return false;
+        try {
+          const scale = Math.min(1, 1280 / v.videoWidth);
+          const c = document.createElement('canvas');
+          c.width = Math.round(v.videoWidth * scale); c.height = Math.round(v.videoHeight * scale);
+          c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+          c.toBlob((b) => fin(b), 'image/jpeg', 0.78);
+          return true;
+        } catch (e) { fin(null); return true; }
+      };
+      const seekAndGrab = async () => {
+        duration = isFinite(v.duration) ? v.duration : 0;
+        try { await v.play(); v.pause(); } catch (e) {}          // force the decoder to produce a real frame
+        const target = (isFinite(v.duration) && v.duration > 0.4) ? Math.min(v.duration * 0.25, 2) : 0.1;
+        v.addEventListener('seeked', () => draw(), { once: true });
+        try { v.currentTime = target; } catch (e) { draw(); }
+        setTimeout(() => { if (!done) draw(); }, 1400);          // fallback if 'seeked' never fires
+      };
+      v.addEventListener('loadeddata', seekAndGrab, { once: true });
+      v.addEventListener('error', () => fin(null), { once: true });
+      setTimeout(() => fin(null), 9000);
+      v.src = url;
+      v.load();
+    });
+  }
+
+  // YouTube duration via the IFrame Player API (no API key needed).
+  ensureYT() {
+    if (window.YT && window.YT.Player) return Promise.resolve();
+    if (this._ytP) return this._ytP;
+    this._ytP = new Promise((res) => {
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { if (prev) { try { prev(); } catch (e) {} } res(); };
+      if (!document.querySelector('script[data-ytapi]')) {
+        const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; s.setAttribute('data-ytapi', '1'); document.head.appendChild(s);
+      }
+    });
+    return this._ytP;
+  }
+  async ytMeta(id) {
+    try { await this.ensureYT(); } catch (e) { return {}; }
+    return new Promise((resolve) => {
+      const host = document.createElement('div');
+      host.style.cssText = 'position:fixed;left:-10000px;top:0;width:4px;height:4px;';
+      document.body.appendChild(host);
+      let done = false, tries = 0, player;
+      const fin = (o) => { if (done) return; done = true; try { player && player.destroy && player.destroy(); } catch (e) {} host.remove(); resolve(o || {}); };
+      const grab = (pl) => {
+        const d = pl.getDuration && pl.getDuration();
+        const vd = pl.getVideoData && pl.getVideoData();
+        const title = vd && vd.title ? vd.title : '';
+        if (d) fin({ duration: d, title });
+        else if (tries++ < 20) setTimeout(() => grab(pl), 300);
+        else fin({ title });
+      };
+      try {
+        player = new window.YT.Player(host, { videoId: id, host: 'https://www.youtube-nocookie.com', playerVars: { playsinline: 1 }, events: { onReady: (e) => grab(e.target), onError: () => fin({}) } });
+      } catch (e) { fin({}); }
+      setTimeout(() => fin({}), 9000);
+    });
+  }
+
+  // Vimeo exact duration via the official Player API (no API key, no CORS fetch).
+  ensureVimeo() {
+    if (window.Vimeo && window.Vimeo.Player) return Promise.resolve();
+    if (this._vimeoP) return this._vimeoP;
+    this._vimeoP = new Promise((res, rej) => {
+      const s = document.createElement('script'); s.src = 'https://player.vimeo.com/api/player.js';
+      s.onload = res; s.onerror = rej; document.head.appendChild(s);
+    });
+    return this._vimeoP;
+  }
+  async vimeoMeta(id) {
+    try { await this.ensureVimeo(); } catch (e) { return {}; }
+    return new Promise((resolve) => {
+      const host = document.createElement('div');
+      host.style.cssText = 'position:fixed;left:-10000px;top:0;width:8px;height:8px;';
+      document.body.appendChild(host);
+      let done = false, player;
+      const fin = (o) => { if (done) return; done = true; try { player && player.destroy && player.destroy(); } catch (e) {} host.remove(); resolve(o || {}); };
+      try {
+        player = new window.Vimeo.Player(host, { id, width: 8, background: true });
+        Promise.all([player.getDuration().catch(() => 0), player.getVideoTitle().catch(() => '')])
+          .then(([d, t]) => fin({ duration: d, title: t })).catch(() => fin({}));
+      } catch (e) { fin({}); }
+      setTimeout(() => fin({}), 9000);
+    });
+  }
+
+  // Canonical category keys never change (films store these). Only the *display label* is editable,
+  // so renaming "Commercials" → "Short Films" reflows every tab, link, dropdown & badge with no migration.
+  get cats() { return ['All', 'Commercials', 'Narrative', 'Music Videos', 'Documentary']; }
+  catLabel(key) { return (this.state.catLabels || {})[key] || ((this.state.content && this.state.content.categoryLabels) || {})[key] || key; }
+  setCatLabel(key, value) {
+    this.setState(s => {
+      const m = { ...s.catLabels }; const raw = value || '';
+      // keep spaces exactly as typed (so "Music Videos" works); only a blank entry clears the override
+      if (raw.trim() === '' || raw.trim() === key) delete m[key]; else m[key] = raw;
+      this.persistCatLabels(m); return { catLabels: m };
+    });
+  }
+  loadCatLabels() { try { return JSON.parse(localStorage.getItem('filmportfolio:catlabels') || '{}'); } catch (e) { return {}; } }
+  persistCatLabels(m) { try { localStorage.setItem('filmportfolio:catlabels', JSON.stringify(m)); } catch (e) {} }
+  // editable site-identity strings (e.g. the home tagline), persisted like every other edit
+  loadSiteText() { try { return JSON.parse(localStorage.getItem('filmportfolio:sitetext') || '{}'); } catch (e) { return {}; } }
+  persistSiteText(m) { try { localStorage.setItem('filmportfolio:sitetext', JSON.stringify(m)); } catch (e) {} }
+  saveSiteText(field, value) {
+    const v = String(value || '').replace(/\s+/g, ' ').trim();
+    this.setState(s => { const m = { ...s.siteText }; if (v) m[field] = v; else delete m[field]; this.persistSiteText(m); return { siteText: m }; });
+  }
+
+  // ── adding / removing films ─────────────────────────────────────────────
+  bgPalette = [
+    'linear-gradient(135deg,#1b2a3a 0%,#0e1620 55%,#06243a 100%)',
+    'linear-gradient(135deg,#3a2417 0%,#1c1109 60%,#4a2c14 100%)',
+    'linear-gradient(135deg,#26331f 0%,#10160c 55%,#3a4a26 100%)',
+    'linear-gradient(135deg,#2b1f33 0%,#130d18 55%,#3d2247 100%)',
+    'linear-gradient(135deg,#0e2a2e 0%,#06181a 55%,#0a3a3f 100%)',
+    'linear-gradient(135deg,#3a1320 0%,#1a0810 55%,#4d1828 100%)',
+    'linear-gradient(135deg,#2c3340 0%,#141820 55%,#3b4452 100%)',
+    'linear-gradient(135deg,#2a1530 0%,#140a18 55%,#1a0e3a 100%)',
+  ];
+  randomBg() { return this.bgPalette[Math.floor(Math.random() * this.bgPalette.length)]; }
+  // deterministic gradient from a film's key, so the JSON content needn't store one
+  bgFor(key) { let h = 0; const s = String(key || ''); for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return this.bgPalette[h % this.bgPalette.length]; }
+  loadAdded() { try { return JSON.parse(localStorage.getItem('filmportfolio:added') || '[]'); } catch (e) { return []; } }
+  persistAdded(a) { try { localStorage.setItem('filmportfolio:added', JSON.stringify(a)); } catch (e) {} }
+  addProject(category) {
+    const id = 'added:' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const proj = { id, title: 'Untitled film', client: 'Client name', role: 'Director of Photography', year: String(new Date().getFullYear()), runtime: '0:00', video: '', poster: '', category, bg: this.randomBg() };
+    this.setState(s => { const added = [...(s.added || []), proj]; this.persistAdded(added); return { added, editing: true }; });
+  }
+  removeAdded(id) {
+    this.setState(s => {
+      const added = (s.added || []).filter(p => p.id !== id);
+      this.persistAdded(added);
+      const overrides = { ...s.overrides }; delete overrides[id]; this.persist(overrides);
+      const thumbs = { ...s.thumbs }; delete thumbs[id];
+      const thumbKinds = { ...s.thumbKinds }; delete thumbKinds[id]; this.persistThumbKinds(thumbKinds);
+      const durations = { ...s.durations }; delete durations[id]; this.persistDurations(durations);
+      const m = this.loadThumbUrls(); delete m[id]; this.persistThumbUrls(m);
+      return { added, overrides, thumbs, durations, thumbKinds };
+    });
+    this.idbDelete(id); this.idbDeleteImage(id);
+  }
+  // pull the title + exact runtime (and a poster) straight from the linked video, on demand
+  syncMetaNow(key) { this._titleSync.add(key); this.forgetAttempts(key); this.resolveMeta(); }
+
+  effective() {
+    const ov = this.state.overrides || {};
+    // _key is each film's stable identity — built-in films key off their original title,
+    // user-added films off a generated id. Everything in storage (overrides / thumbs /
+    // durations / idb) keys off _key, so the visible title stays freely editable.
+    const published = (this.state.content && Array.isArray(this.state.content.films)) ? this.state.content.films : this.projects;
+    const base = [
+      ...published.map(p => ({ _key: p.title, ...p })),
+      ...(this.state.added || []).map(p => ({ _key: p.id, isAdded: true, ...p })),
+    ];
+    return base.map(p => { const e = { ...p, ...(ov[p._key] || {}) }; if (!e.bg) e.bg = this.bgFor(e._key); return e; });
+  }
+
+  get filtered() {
+    const c = this.state.cat;
+    const list = this.effective();
+    return c === 'All' ? list : list.filter(p => p.category === c);
+  }
+
+  // ── upload / override handling ──────────────────────────────────────────
+  loadOverrides() {
+    try { return JSON.parse(localStorage.getItem('filmportfolio:overrides') || '{}'); } catch (e) { return {}; }
+  }
+  persist(ov) {
+    // session-only sources (blob:, or large inline data:) can't be stored — strip them,
+    // but their captured thumbnail is persisted separately so the tile still shows.
+    const clean = {};
+    for (const k in ov) {
+      const e = { ...ov[k] };
+      const v = String(e.video || '');
+      if (v.startsWith('blob:') || (v.startsWith('data:') && v.length > 1500000)) delete e.video;
+      if (Object.keys(e).length) clean[k] = e;
+    }
+    try { localStorage.setItem('filmportfolio:overrides', JSON.stringify(clean)); } catch (e) {}
+  }
+  saveOverride(title, patch) {
+    this.setState(s => {
+      const ov = { ...s.overrides, [title]: { ...(s.overrides[title] || {}), ...patch } };
+      this.persist(ov);
+      let thumbs = s.thumbs, durations = s.durations, thumbKinds = s.thumbKinds;
+      if ('video' in patch) {                          // new video → recompute thumbnail, duration, and pull the title
+        thumbs = { ...s.thumbs }; delete thumbs[title];
+        durations = { ...s.durations }; delete durations[title];
+        thumbKinds = { ...s.thumbKinds }; delete thumbKinds[title]; this.persistThumbKinds(thumbKinds);
+        this.forgetAttempts(title);
+        this._titleSync.add(title);
+        const m = this.loadThumbUrls(); delete m[title]; this.persistThumbUrls(m);
+        this.idbDeleteImage(title);
+        this.persistDurations(durations);
+      }
+      return { overrides: ov, thumbs, durations, thumbKinds };
+    });
+  }
+  clearThumbnail(title) {
+    this.setState(s => {
+      const ov = { ...s.overrides };
+      if (ov[title]) { const e = { ...ov[title] }; delete e.poster; if (Object.keys(e).length) ov[title] = e; else delete ov[title]; }
+      this.persist(ov);
+      const thumbs = { ...s.thumbs }; delete thumbs[title];
+      const thumbKinds = { ...s.thumbKinds }; delete thumbKinds[title]; this.persistThumbKinds(thumbKinds);
+      const m = this.loadThumbUrls(); delete m[title]; this.persistThumbUrls(m);
+      this.forgetAttempts(title);
+      return { overrides: ov, thumbs, thumbKinds };
+    });
+    this.idbDeleteImage(title);
+  }
+  // localStorage now holds ONLY small remote URL strings; legacy data:-URL entries are filtered out on read
+  loadThumbUrls() { try { const m = JSON.parse(localStorage.getItem('filmportfolio:thumbs') || '{}'); const out = {}; for (const k in m) if (/^https?:/i.test(m[k])) out[k] = m[k]; return out; } catch (e) { return {}; } }
+  persistThumbUrls(m) { try { localStorage.setItem('filmportfolio:thumbs', JSON.stringify(m)); } catch (e) {} }
+  loadThumbKinds() { try { return JSON.parse(localStorage.getItem('filmportfolio:thumbkinds') || '{}'); } catch (e) { return {}; } }
+  persistThumbKinds(k) { try { localStorage.setItem('filmportfolio:thumbkinds', JSON.stringify(k)); } catch (e) {} }
+  handleFiles(title, files) {
+    [...(files || [])].forEach(file => {
+      if (file.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|gif)$/i.test(file.name)) {
+        this.downscaleImage(file).then(blob => { if (blob) this.setImageThumb(title, blob, 'poster'); });
+      } else if (file.type.startsWith('video/') || this.isFileSrc(file.name)) {
+        this.addVideoFile(title, file);
+      }
+    });
+  }
+
+  async addVideoFile(title, file) {
+    const url = URL.createObjectURL(file);
+    this.saveOverride(title, { video: url });             // play this session (clears any old thumb)
+    try { await this.idbPut(title, file); } catch (e) {}  // durable: replays after reload
+    this.forgetAttempts(title);
+    const r = await this.captureFrame(url);               // capture poster + duration NOW, from the file
+    if (r.blob) this.setImageThumb(title, r.blob, 'frame');
+    if (r.duration) this.setDuration(title, r.duration);
+  }
+
+  downscaleImage(file, max = 1600) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        try { c.toBlob((b) => resolve(b), 'image/jpeg', 0.84); } catch (e) { resolve(null); }
+      };
+      img.onerror = () => resolve(null);
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  // ── durable storage for uploaded video blobs (localStorage can't hold them) ──
+  idbOpen() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('filmportfolio', 2);
+      r.onupgradeneeded = () => { const db = r.result; if (!db.objectStoreNames.contains('videos')) db.createObjectStore('videos'); if (!db.objectStoreNames.contains('images')) db.createObjectStore('images'); };
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  }
+  async idbPut(key, blob) { const db = await this.idbOpen(); return new Promise((res) => { const tx = db.transaction('videos', 'readwrite'); tx.objectStore('videos').put(blob, key); tx.oncomplete = res; tx.onerror = res; }); }
+  async idbGet(key) { const db = await this.idbOpen(); return new Promise((res) => { const rq = db.transaction('videos', 'readonly').objectStore('videos').get(key); rq.onsuccess = () => res(rq.result || null); rq.onerror = () => res(null); }); }
+  async idbKeys() { const db = await this.idbOpen(); return new Promise((res) => { const rq = db.transaction('videos', 'readonly').objectStore('videos').getAllKeys(); rq.onsuccess = () => res(rq.result || []); rq.onerror = () => res([]); }); }
+  async idbDelete(key) { try { const db = await this.idbOpen(); return new Promise((res) => { const tx = db.transaction('videos', 'readwrite'); tx.objectStore('videos').delete(key); tx.oncomplete = res; tx.onerror = res; }); } catch (e) {} }
+  // image store — uploaded stills and captured video frames (too big for localStorage)
+  async idbPutImage(key, blob) { const db = await this.idbOpen(); return new Promise((res) => { const tx = db.transaction('images', 'readwrite'); tx.objectStore('images').put(blob, key); tx.oncomplete = res; tx.onerror = res; }); }
+  async idbGetImage(key) { const db = await this.idbOpen(); return new Promise((res) => { const rq = db.transaction('images', 'readonly').objectStore('images').get(key); rq.onsuccess = () => res(rq.result || null); rq.onerror = () => res(null); }); }
+  async idbImageKeys() { const db = await this.idbOpen(); return new Promise((res) => { const rq = db.transaction('images', 'readonly').objectStore('images').getAllKeys(); rq.onsuccess = () => res(rq.result || []); rq.onerror = () => res([]); }); }
+  async idbDeleteImage(key) { try { const db = await this.idbOpen(); return new Promise((res) => { const tx = db.transaction('images', 'readwrite'); tx.objectStore('images').delete(key); tx.oncomplete = res; tx.onerror = res; }); } catch (e) {} }
+  async rehydrateThumbs() {
+    try {
+      const keys = await this.idbImageKeys();
+      for (const key of keys) {
+        const blob = await this.idbGetImage(key);
+        if (blob) { const url = URL.createObjectURL(blob); this.setState(s => ({ thumbs: { ...s.thumbs, [key]: url } })); }
+      }
+    } catch (e) {}
+  }
+  async rehydrateVideos() {
+    try {
+      const keys = await this.idbKeys();
+      for (const key of keys) {
+        const blob = await this.idbGet(key);
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          this.setState(s => ({ overrides: { ...s.overrides, [key]: { ...(s.overrides[key] || {}), video: url } } }));
+        }
+      }
+    } catch (e) {}
+  }
+  submitContact(e) {
+    e.preventDefault();
+    const f = e.target.elements;
+    const subject = encodeURIComponent(`New enquiry — ${f.name.value || 'Portfolio'}`);
+    const body = encodeURIComponent(`Name: ${f.name.value}\nEmail: ${f.email.value}\nProject: ${f.ptype.value}\n\n${f.message.value}`);
+    window.location.href = `mailto:hello@joelmarcellus.com?subject=${subject}&body=${body}`;
+  }
+
+  renderVals() {
+    const filtered = this.filtered;
+    const active = this.state.cat;
+    const eff = this.effective();
+    const slide = eff.length ? (this.state.slide % eff.length) : 0;
+    const editing = this.state.editing;
+    const cats = this.cats.map(key => {
+      const on = key === active;
+      const editable = key !== 'All';
+      return {
+        key,
+        name: this.catLabel(key),
+        label: this.catLabel(key),
+        editable,
+        showInput: editing && editable,
+        showButton: !(editing && editable),
+        setLabel: (e) => this.setCatLabel(key, e.target.value),
+        select: () => this.setState({ cat: key }),
+        bg: on ? '#f5f5f3' : 'transparent',
+        color: on ? '#0a0a0a' : '#9a9a93',
+        border: on ? '#f5f5f3' : 'rgba(255,255,255,0.14)',
+      };
+    });
+    const catOptions = this.cats.filter(c => c !== 'All').map(key => ({ value: key, label: this.catLabel(key) }));
+    const items = filtered.map((p, i) => ({
+      ...p,
+      runtime: this.runtimeFor(p),
+      categoryLabel: this.catLabel(p.category),
+      thumbBg: this.thumbBg(p),
+      editing,
+      notEditing: !editing,
+      catOptions,
+      urlVal: (p.video && /^(https?:|videos\/)/.test(p.video)) ? p.video : '',
+      open: () => { if (this.state.editing) return; this.setState({ open: true, idx: i }); },
+      stop: (e) => e.stopPropagation(),
+      onDragOver: (e) => e.preventDefault(),
+      onDrop: (e) => { e.preventDefault(); e.stopPropagation(); this.handleFiles(p._key, e.dataTransfer.files); },
+      onPick: (e) => this.handleFiles(p._key, e.target.files),
+      onUrl: (e) => { const val = e.target.value.trim(); if (val) this.saveOverride(p._key, { video: val }); },
+      onUrlKey: (e) => { if (e.key === 'Enter') e.target.blur(); },
+      hasThumb: !!(p.poster || (this.state.thumbs || {})[p._key]),
+      noThumbYet: !(p.poster || (this.state.thumbs || {})[p._key]),
+      clearThumb: (e) => { if (e) e.stopPropagation(); this.clearThumbnail(p._key); },
+      // editable metadata — persists per project, survives video swaps
+      setTitle: (e) => this.saveOverride(p._key, { title: e.target.value }),
+      setClient: (e) => this.saveOverride(p._key, { client: e.target.value }),
+      setRole: (e) => this.saveOverride(p._key, { role: e.target.value }),
+      setYear: (e) => this.saveOverride(p._key, { year: e.target.value }),
+      setCategory: (e) => this.saveOverride(p._key, { category: e.target.value }),
+      isAdded: !!p.isAdded,
+      canSync: !!p.video,
+      syncTitle: (e) => { if (e) e.stopPropagation(); this.syncMetaNow(p._key); },
+      remove: (e) => { if (e) e.stopPropagation(); this.removeAdded(p._key); },
+    }));
+    const n = filtered.length;
+    const idx = Math.min(this.state.idx, Math.max(0, n - 1));
+    const cur = filtered[idx] || this.projects[0];
+    const media = this.resolveMedia(cur && cur.video);
+    const related = this.effective()
+      .filter(p => cur && p.category === cur.category && p._key !== cur._key)
+      .map(p => ({
+        title: p.title, client: p.client, runtime: this.runtimeFor(p),
+        thumbBg: this.thumbBg(p),
+        go: (e) => { if (e) e.stopPropagation(); const j = filtered.findIndex(x => x._key === p._key); if (j >= 0) this.setState({ idx: j }); },
+      }));
+    const f = this.fonts[this.state.font] || this.fonts[0];
+    const enterCat = (c) => this.setState({ page: 'work', cat: c });
+    const playCur = () => this.setState({ page: 'work', cat: 'All', open: true, idx: slide });
+    const homeCur = eff[slide] || this.projects[0];
+    const monoFam = "var(--font-mono, 'JetBrains Mono', monospace)";
+    const homeNowEl = React.createElement('div', { key: slide, onClick: playCur, style: { display: 'flex', flexDirection: 'column', gap: '8px', cursor: 'pointer', animation: 'titleIn 0.9s cubic-bezier(0.2,0.6,0.2,1) both' } },
+      React.createElement('span', { style: { fontFamily: monoFam, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(245,245,243,0.82)' } }, 'Now showing — ' + this.catLabel(homeCur.category)),
+      React.createElement('h2', { style: { fontSize: 'clamp(30px,4.2vw,60px)', fontWeight: 500, lineHeight: 0.98, letterSpacing: '-0.02em', margin: 0 } }, homeCur.title),
+      React.createElement('span', { style: { fontFamily: monoFam, fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(245,245,243,0.85)', marginTop: '4px' } }, '▶ Play film')
+    );
+    const fontList = this.fonts.map((x, i) => ({
+      label: x.label, preview: x.display, set: () => this.setFont(i),
+      color: i === this.state.font ? '#f5f5f3' : 'rgba(245,245,243,0.65)',
+      bg: i === this.state.font ? 'rgba(255,255,255,0.08)' : 'transparent',
+    }));
+    return {
+      cats,
+      items,
+      countLabel: `${String(n).padStart(2, '0')} / ${String(eff.length).padStart(2, '0')} films`,
+      addFilm: () => this.addProject(active === 'All' ? catOptions[0] : active),
+      addCatLabel: '→ ' + (active === 'All' ? catOptions[0] : active),
+      open: this.state.open,
+      tagline: (this.state.siteText && this.state.siteText.tagline) || (this.state.content && this.state.content.tagline) || 'Los Angeles — Worldwide',
+      taglineCursor: this.state.admin ? 'text' : 'default',
+      taglineHover: this.state.admin ? 'rgba(245,245,243,0.45)' : 'transparent',
+      saveTagline: (e) => this.saveSiteText('tagline', e.target.textContent),
+      taglineKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } },
+      current: { ...cur, runtime: this.runtimeFor(cur), categoryLabel: this.catLabel(cur && cur.category), embed: media.embed, mp4: media.mp4, noVideo: !media.embed && !media.mp4, hasVideo: !!(media.embed || media.mp4) },
+      // expand-to-fill toggle — works regardless of the host frame's fullscreen permission policy
+      expanded: this.state.expanded,
+      collapsedView: !this.state.expanded,
+      playerStyle: this.state.expanded
+        ? { position: 'fixed', inset: 0, zIndex: 200, width: '100vw', height: '100vh', borderRadius: 0, overflow: 'hidden', background: '#000', boxShadow: 'none' }
+        : { position: 'relative', width: 'min(1100px, 100%)', aspectRatio: '16/9', borderRadius: '4px', overflow: 'hidden', background: cur.bg, boxShadow: '0 40px 120px rgba(0,0,0,0.6)' },
+      fsLabel: this.state.expanded ? 'Exit' : 'Fullscreen',
+      playerRef: (el) => { this._playerEl = el; },
+      // Prefer real browser fullscreen (true takeover of the user's screen on the live site);
+      // fall back to a fixed-overlay expand only where the Fullscreen API is blocked (e.g. a
+      // sandboxed editor preview iframe), so the control always does something.
+      goFullscreen: (e) => {
+        if (e) e.stopPropagation();
+        const d = document;
+        const fsEl = d.fullscreenElement || d.webkitFullscreenElement;
+        if (fsEl) { (d.exitFullscreen || d.webkitExitFullscreen || function(){}).call(d); return; }
+        if (this.state.expanded) { this.setState({ expanded: false }); return; }  // exit CSS fallback
+        const el = this._playerEl;
+        if (el && el.requestFullscreen) { const p = el.requestFullscreen(); if (p && p.catch) p.catch(() => this.setState({ expanded: true })); return; }
+        if (el && el.webkitRequestFullscreen) { try { el.webkitRequestFullscreen(); return; } catch (err) {} }
+        this.setState({ expanded: true });   // API unavailable → fixed-overlay expand
+      },
+      related,
+      hasRelated: related.length > 0,
+      // homepage montage
+      showHome: this.state.page === 'home',
+      notHome: this.state.page !== 'home',
+      homeSlides: eff.map((p, i) => ({ bg: this.thumbBg(p), opacity: i === slide ? 1 : 0 })),
+      homeNowEl,
+      homeCats: this.cats.filter(c => c !== 'All').map(key => ({ name: this.catLabel(key), go: () => enterCat(key) })),
+      goHome: () => this.setState({ page: 'home', open: false, editing: false }),
+      enter: () => this.setState({ page: 'work' }),
+      playCurrent: playCur,
+      // font switcher
+      fontDisplay: f.display,
+      fontMono: f.mono,
+      fontLabel: f.label,
+      fontList,
+      fontOpen: this.state.fontOpen,
+      toggleFont: () => this.setState(s => ({ fontOpen: !s.fontOpen })),
+      close: () => this.setState({ open: false, expanded: false }),
+      stop: (e) => e.stopPropagation(),
+      next: (e) => { e.stopPropagation(); this.setState(s => ({ idx: (idx + 1) % n })); },
+      prev: (e) => { e.stopPropagation(); this.setState(s => ({ idx: (idx - 1 + n) % n })); },
+      // page + edit mode
+      showWork: this.state.page === 'work',
+      showContact: this.state.page === 'contact',
+      goWork: () => this.setState({ page: 'work' }),
+      goContact: () => this.setState({ page: 'contact', editing: false }),
+      workColor: this.state.page === 'work' ? '#f5f5f3' : '#7d7d78',
+      contactColor: this.state.page === 'contact' ? '#f5f5f3' : '#7d7d78',
+      admin: this.state.admin,
+      exitAdmin: () => this.exitAdmin(),
+      editing: this.state.editing,
+      editLabel: this.state.editing ? 'Done' : 'Edit',
+      toggleEdit: () => this.setState(s => ({ editing: !s.editing, page: 'work' })),
+      openReel: () => this.setState({ page: 'work', open: true, idx: 0 }),
+      submitContact: (e) => this.submitContact(e),
+    };
+  }
+
+  componentDidMount() {
+    const turls = this.loadThumbUrls(); this.persistThumbUrls(turls);   // migrate: purge legacy data-URL thumbs from localStorage
+    this.setState({ overrides: this.loadOverrides(), font: this.loadFont(), thumbs: turls, durations: this.loadDurations(), added: this.loadAdded(), catLabels: this.loadCatLabels(), thumbKinds: this.loadThumbKinds(), siteText: this.loadSiteText(), admin: this.detectAdmin() }, () => this.resolveMeta());
+    this.loadContent();
+    this.rehydrateVideos();
+    this.rehydrateThumbs();
+    this._slide = setInterval(() => this.setState(s => ({ slide: s.slide + 1 })), 4200);
+    this._key = (e) => {
+      if (!this.state.open) return;
+      if (e.key === 'Escape') { if (document.fullscreenElement) return; this.setState(s => s.expanded ? { expanded: false } : { open: false }); }
+      if (e.key === 'ArrowRight') { const n = this.filtered.length; this.setState(s => ({ idx: (s.idx + 1) % n })); }
+      if (e.key === 'ArrowLeft') { const n = this.filtered.length; this.setState(s => ({ idx: (s.idx - 1 + n) % n })); }
+    };
+    window.addEventListener('keydown', this._key);
+    // keep the button's state in sync with real fullscreen (enter, exit, Esc, browser UI)
+    this._fsChange = () => { const on = !!(document.fullscreenElement || document.webkitFullscreenElement); this.setState({ expanded: on }); };
+    document.addEventListener('fullscreenchange', this._fsChange);
+    document.addEventListener('webkitfullscreenchange', this._fsChange);
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState || prevState.overrides !== this.state.overrides) this.resolveMeta();
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this._key); document.removeEventListener('fullscreenchange', this._fsChange); document.removeEventListener('webkitfullscreenchange', this._fsChange); clearInterval(this._slide); }
+}
+</script>
+</body>
+</html>

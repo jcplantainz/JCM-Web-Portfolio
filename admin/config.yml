@@ -1,0 +1,56 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Where Decap commits any images you upload through the dashboard.
+media_folder: "media"
+public_folder: "/media"
+
+# Friendlier editor UI
+site_url: /
+display_url: /
+locale: en
+
+collections:
+  - name: "site"
+    label: "Portfolio"
+    delete: false
+    files:
+      - name: "content"
+        label: "Films & Site Settings"
+        file: "content/site.json"
+        description: "Edit your films, reorder them, swap video links, rename categories. Click Publish to push it live."
+        fields:
+          - label: "Tagline (under your name on the home screen)"
+            name: "tagline"
+            widget: "string"
+            required: false
+
+          - label: "Category names"
+            name: "categoryLabels"
+            widget: "object"
+            collapsed: true
+            hint: "Rename the four filter tabs. The films stay linked automatically."
+            fields:
+              - { label: "Commercials tab", name: "Commercials", widget: "string" }
+              - { label: "Narrative tab", name: "Narrative", widget: "string" }
+              - { label: "Music Videos tab", name: "Music Videos", widget: "string" }
+              - { label: "Documentary tab", name: "Documentary", widget: "string" }
+
+          - label: "Films"
+            name: "films"
+            widget: "list"
+            label_singular: "Film"
+            summary: "{{fields.title}} — {{fields.client}}"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Client", name: "client", widget: "string", required: false }
+              - label: "Category"
+                name: "category"
+                widget: "select"
+                options: ["Commercials", "Narrative", "Music Videos", "Documentary"]
+              - { label: "Your role", name: "role", widget: "string", required: false, hint: "e.g. Director of Photography, Editor, Directed/shot/edited" }
+              - { label: "Year", name: "year", widget: "string", required: false }
+              - { label: "Runtime", name: "runtime", widget: "string", required: false, hint: "e.g. 1:24 — leave blank to auto-read from the video" }
+              - { label: "Video link", name: "video", widget: "string", required: false, hint: "YouTube, Vimeo, or a direct .mp4 URL" }
+              - { label: "Poster image URL", name: "poster", widget: "string", required: false, hint: "Optional still. Leave blank for the gradient tile." }
