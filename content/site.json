@@ -1,17 +1,121 @@
 {
-  "tagline": "Los Angeles — Worldwide",
+  "tagline": "Buffalo — NYC",
   "categoryLabels": {
-    "Commercials": "Commercials",
-    "Narrative": "Narrative",
+    "Commercials": "Narrative",
+    "Narrative": "Sports & Events",
     "Music Videos": "Music Videos",
-    "Documentary": "Documentary"
+    "Documentary": "Social Media"
   },
   "films": [
-    { "title": "Headspace", "client": "University at Buffalo – Media Study", "category": "Commercials", "role": "Directed, shot & edited", "year": "2023", "runtime": "", "video": "https://youtu.be/aqz-KE-bpKQ", "poster": "" },
-    { "title": "Days Pass Me By", "client": "JC Marcellus", "category": "Commercials", "role": "End-to-end — solo", "year": "2026", "runtime": "", "video": "", "poster": "" },
-    { "title": "Bulls Volleyball Intro Video", "client": "Buffalo Volleyball", "category": "Narrative", "role": "Directed, shot & edited", "year": "2025", "runtime": "", "video": "", "poster": "" },
-    { "title": "Bulls Track & Field Meet Promo", "client": "Buffalo TFXC", "category": "Narrative", "role": "DP & Editor", "year": "2024", "runtime": "", "video": "", "poster": "" },
-    { "title": "Punjabi Gala", "client": "Sri Lanken Student Association", "category": "Narrative", "role": "Director of Photography", "year": "2023", "runtime": "", "video": "", "poster": "" },
-    { "title": "Mock Shaadi", "client": "Indian Student Association", "category": "Narrative", "role": "Director of Photography", "year": "2023", "runtime": "", "video": "", "poster": "" }
+    {
+      "title": "Headspace",
+      "client": "University at Buffalo – Media Study",
+      "category": "Commercials",
+      "role": "Directed, shot & edited",
+      "year": "2023",
+      "runtime": "0:41",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Days Pass Me By",
+      "client": "JC Marcellus",
+      "category": "Commercials",
+      "role": "End-to-end — solo",
+      "year": "2026",
+      "runtime": "0:22",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Bulls Volleyball Intro Video",
+      "client": "Buffalo Volleyball",
+      "category": "Narrative",
+      "role": "Directed, shot & edited",
+      "year": "2025",
+      "runtime": "1:06",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Bulls Track & Field Meet Promo",
+      "client": "Buffalo TFXC",
+      "category": "Narrative",
+      "role": "DP & Editor",
+      "year": "2024",
+      "runtime": "",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Punjabi Gala",
+      "client": "Sri Lanken Student Association",
+      "category": "Narrative",
+      "role": "Director of Photography",
+      "year": "2023",
+      "runtime": "",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Mock Shaadi",
+      "client": "Indian Student Association",
+      "category": "Narrative",
+      "role": "Director of Photography",
+      "year": "2023",
+      "runtime": "",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "SPRING BALL",
+      "client": "Client name",
+      "category": "Commercials",
+      "role": "Director of Photography",
+      "year": "2026",
+      "runtime": "0:43",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Untitled film",
+      "client": "Client name",
+      "category": "Narrative",
+      "role": "Director of Photography",
+      "year": "2026",
+      "runtime": "0:49",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Riddle Me This",
+      "client": "Client name",
+      "category": "Documentary",
+      "role": "End-to-end — solo",
+      "year": "2026",
+      "runtime": "1:19",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Rent Free Sounds",
+      "client": "Client name",
+      "category": "Documentary",
+      "role": "end",
+      "year": "2026",
+      "runtime": "1:07",
+      "video": "",
+      "poster": ""
+    },
+    {
+      "title": "Exam Week with Little Victor",
+      "client": "Client name",
+      "category": "Documentary",
+      "role": "Director of Photography",
+      "year": "2026",
+      "runtime": "0:57",
+      "video": "",
+      "poster": ""
+    }
   ]
 }
