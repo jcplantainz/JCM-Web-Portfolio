@@ -19,6 +19,7 @@
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes titleIn { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
   [data-tile]:hover .play-btn { opacity: 1 !important; transform: scale(1) !important; }
   [data-tile]:hover img, [data-tile]:hover .thumb { transform: scale(1.03); }
 
@@ -65,7 +66,6 @@
         <nav style="display:flex; align-items:center; gap:24px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
           <span onClick="{{ enter }}" style="color:#f5f5f3; cursor:pointer;" style-hover="opacity:0.65;">Work</span>
           <span onClick="{{ goContact }}" style="color:#f5f5f3; cursor:pointer;" style-hover="opacity:0.65;">Contact</span>
-          <span data-cta="" onClick="{{ playCurrent }}" style="color:#0a0a0a; background:#f5f5f3; padding:8px 14px; border-radius:2px; cursor:pointer;" style-hover="opacity:0.85;">Showreel</span>
         </nav>
       </div>
       <div data-r="home-center" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 40px; pointer-events:none;">
@@ -95,9 +95,9 @@
       <span onClick="{{ goContact }}" style="color:{{ contactColor }}; cursor:pointer;" style-hover="color:#f5f5f3;">Contact</span>
       <sc-if value="{{ admin }}" hint-placeholder-val="{{ false }}">
         <span onClick="{{ toggleEdit }}" style="color:#7d7d78; cursor:pointer;" style-hover="color:#f5f5f3;">{{ editLabel }}</span>
+        <span onClick="{{ openPub }}" title="Save your edits to the live site" style="display:flex; align-items:center; gap:7px; color:#7be0a3; cursor:pointer;" style-hover="color:#f5f5f3;"><span style="width:6px; height:6px; border-radius:999px; background:#7be0a3;"></span>Publish</span>
         <span onClick="{{ exitAdmin }}" title="Return to the public view" style="color:#56564f; cursor:pointer;" style-hover="color:#f5f5f3;">Exit admin</span>
       </sc-if>
-      <span data-cta="" onClick="{{ openReel }}" style="color:#0a0a0a; background:#f5f5f3; padding:8px 14px; border-radius:2px; cursor:pointer;" style-hover="opacity:0.85;">Showreel</span>
     </nav>
   </header>
   </sc-if>
@@ -111,7 +111,7 @@
       </div>
     </sc-if>
     <div data-r="work-head" style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:40px;">
-      <h1 style="font-size:clamp(34px,5vw,64px); font-weight:500; line-height:1.02; letter-spacing:-0.02em; margin:0; max-width:14ch; text-wrap:balance;">Selected work, frame by frame.</h1>
+      <h1 style="font-size:clamp(34px,5vw,64px); font-weight:500; line-height:1.02; letter-spacing:-0.02em; margin:0; max-width:14ch; text-wrap:balance;">See the Vision.</h1>
       <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; color:#7d7d78;">{{ countLabel }}</span>
     </div>
 
@@ -121,14 +121,17 @@
           <button onClick="{{ c.select }}" style="background:{{ c.bg }}; color:{{ c.color }}; border:1px solid {{ c.border }}; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:9px 16px; border-radius:2px; cursor:pointer; transition:all 0.18s ease;">{{ c.name }}</button>
         </sc-if>
         <sc-if value="{{ c.showInput }}" hint-placeholder-val="{{ false }}">
-          <input type="text" value="{{ c.label }}" onChange="{{ c.setLabel }}" placeholder="Tab name" style="background:rgba(245,245,243,0.05); color:#f5f5f3; border:1px dashed rgba(245,245,243,0.4); font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:9px 14px; border-radius:2px; outline:none; width:13ch;" style-focus="border-color:rgba(245,245,243,0.7); border-style:solid;">
+          <div style="display:flex; align-items:center; gap:4px; flex:none;">
+            <input type="text" value="{{ c.label }}" onChange="{{ c.setLabel }}" placeholder="Tab name" style="background:rgba(245,245,243,0.05); color:#f5f5f3; border:1px dashed rgba(245,245,243,0.4); font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:9px 14px; border-radius:2px; outline:none; width:13ch;" style-focus="border-color:rgba(245,245,243,0.7); border-style:solid;">
+            <span onClick="{{ c.toggleHide }}" title="{{ c.eyeTitle }}" style="font-family:var(--font-mono,'JetBrains Mono',monospace); font-size:9px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; padding:9px 10px; border-radius:2px; border:1px solid rgba(255,255,255,0.1); color:{{ c.eyeColor }};" style-hover="background:rgba(245,245,243,0.07);">{{ c.eyeLabel }}</span>
+          </div>
         </sc-if>
       </sc-for>
     </div>
 
     <div data-r="grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(440px, 1fr)); gap:28px 28px;">
       <sc-for list="{{ items }}" as="p" hint-placeholder-count="6">
-        <div onClick="{{ p.open }}" onDrop="{{ p.onDrop }}" onDragOver="{{ p.onDragOver }}" data-tile="" style="cursor:pointer;">
+        <div onClick="{{ p.open }}" onDrop="{{ p.onDrop }}" onDragOver="{{ p.onDragOver }}" data-tile="" style="cursor:pointer; outline:{{ p.dragOutline }}; outline-offset:-2px; border-radius:3px; transition:outline-color 0.12s ease;">
           <div class="thumb" style="position:relative; aspect-ratio:16/9; border-radius:3px; overflow:hidden; background:{{ p.thumbBg }}; transition:transform 0.4s cubic-bezier(0.2,0.6,0.2,1);">
             <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);"></div>
             <div style="position:absolute; inset:0; background:rgba(10,10,10,0); transition:background 0.3s ease; display:flex; align-items:center; justify-content:center;" style-hover="background:rgba(10,10,10,0.35);">
@@ -138,6 +141,9 @@
             </div>
             <span style="position:absolute; top:14px; left:14px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(245,245,243,0.85); background:rgba(10,10,10,0.4); padding:4px 8px; border-radius:2px; backdrop-filter:blur(4px);">{{ p.categoryLabel }}</span>
             <span style="position:absolute; bottom:14px; right:14px; font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10px; letter-spacing:0.08em; color:rgba(245,245,243,0.7);">{{ p.runtime }}</span>
+            <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
+              <div draggable="true" onDragStart="{{ p.dragStart }}" onDragEnd="{{ p.dragEnd }}" onClick="{{ p.stop }}" title="Drag to reorder" style="position:absolute; top:10px; right:10px; z-index:10; cursor:grab; color:rgba(245,245,243,0.78); font-size:17px; line-height:1; background:rgba(10,10,10,0.58); padding:5px 9px; border-radius:2px; user-select:none; letter-spacing:2px; backdrop-filter:blur(3px);">⠿</div>
+            </sc-if>
             <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
               <div onClick="{{ p.stop }}" style="position:absolute; inset:0; z-index:6; background:linear-gradient(rgba(8,8,8,0.42), rgba(8,8,8,0.68)); backdrop-filter:blur(1px); border:1.5px dashed rgba(245,245,243,0.4); border-radius:3px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:18px; text-align:center;">
                 <sc-if value="{{ p.hasThumb }}" hint-placeholder-val="{{ false }}">
@@ -265,11 +271,9 @@
         <div style="display:flex; flex-direction:column; gap:8px;">
           <label style="font-family:var(--font-mono, 'JetBrains Mono', monospace); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#7d7d78;">Project type</label>
           <select name="ptype" style="background:rgba(245,245,243,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:2px; color:#f5f5f3; font-family:var(--font-display, 'Schibsted Grotesk', sans-serif); font-size:15px; padding:12px 14px; outline:none; appearance:none;" style-focus="border-color:rgba(245,245,243,0.45);">
-            <option style="background:#0a0a0a;">Commercial</option>
-            <option style="background:#0a0a0a;">Narrative / Film</option>
-            <option style="background:#0a0a0a;">Music Video</option>
-            <option style="background:#0a0a0a;">Documentary</option>
-            <option style="background:#0a0a0a;">Other</option>
+            <sc-for list="{{ contactTypes }}" as="ct" hint-placeholder-count="5">
+              <option style="background:#0a0a0a;">{{ ct }}</option>
+            </sc-for>
           </select>
         </div>
         <div style="display:flex; flex-direction:column; gap:8px;">
@@ -376,16 +380,94 @@
   </div>
   </sc-if>
 
+  <sc-if value="{{ pubShow }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closePub }}" style="position:fixed; inset:0; z-index:300; background:rgba(6,6,6,0.74); backdrop-filter:blur(7px); display:flex; align-items:center; justify-content:center; padding:24px; font-family:var(--font-mono, 'JetBrains Mono', monospace);">
+    <div onClick="{{ stop }}" style="width:min(660px,100%); max-height:90vh; overflow:auto; background:#0f0f11; border:1px solid rgba(255,255,255,0.12); border-radius:12px; box-shadow:0 50px 140px rgba(0,0,0,0.65); padding:30px 30px 26px;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:8px;">
+        <h3 style="margin:0; font-family:'Schibsted Grotesk', sans-serif; font-size:23px; font-weight:600; letter-spacing:-0.01em; color:#f5f5f3;">Publish your changes</h3>
+        <span onClick="{{ closePub }}" style="color:#7d7d78; cursor:pointer; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap; padding-top:6px;" style-hover="color:#f5f5f3;">Close</span>
+      </div>
+
+      <sc-if value="{{ gitConnected }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:0 0 18px; font-size:12.5px; line-height:1.65; color:#9a9a93;">Connected to GitHub. One click writes your changes to the site and the host redeploys — live in about a minute.</p>
+
+        <sc-if value="{{ hasWarn }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid rgba(240,180,90,0.3); background:rgba(240,180,90,0.07); border-radius:8px; padding:12px 14px; margin-bottom:18px;">
+          <div style="font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#e8b66a; margin-bottom:7px;">Heads up — won't show online as-is</div>
+          <sc-for list="{{ warns }}" as="w" hint-placeholder-count="1">
+            <div style="font-size:12px; line-height:1.55; color:#d8c9ac; margin-top:3px;">{{ w }}</div>
+          </sc-for>
+          <div style="font-size:11.5px; line-height:1.55; color:#9a9488; margin-top:8px;">Uploaded files stay on this device. Host the image/video (or add it to your repo's <b style="color:#cdb98a;">media</b> folder) and paste the link into that film, then publish again. You can still publish now — those tiles just fall back to a gradient.</div>
+        </div>
+        </sc-if>
+
+        <div onClick="{{ publishLive }}" style="display:flex; align-items:center; justify-content:center; gap:10px; background:{{ pubBtnBg }}; color:{{ pubBtnFg }}; padding:15px 18px; border-radius:8px; cursor:{{ pubBtnCursor }}; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:500;" style-hover="opacity:0.9;">
+          <sc-if value="{{ isPublishing }}" hint-placeholder-val="{{ false }}"><span style="width:13px; height:13px; border-radius:999px; border:2px solid rgba(10,10,10,0.3); border-top-color:#0a0a0a; display:inline-block; animation:spin 0.7s linear infinite;"></span></sc-if>
+          {{ pubBtnLabel }}
+        </div>
+
+        <sc-if value="{{ pubOk }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; align-items:center; gap:10px; margin-top:14px; padding:13px 15px; border:1px solid rgba(123,224,163,0.32); background:rgba(123,224,163,0.08); border-radius:8px;">
+            <span style="flex:none; width:20px; height:20px; border-radius:999px; background:rgba(123,224,163,0.18); color:#7be0a3; font-size:12px; display:flex; align-items:center; justify-content:center;">✓</span>
+            <span style="font-size:12.5px; line-height:1.5; color:#cfe9d6;">Published. Your live site is rebuilding now — give it about a minute, then <a href="{{ siteUrl }}" target="_blank" rel="noopener" style="color:#7be0a3; text-decoration:underline;">view it</a>.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ pubErr }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:14px; padding:13px 15px; border:1px solid rgba(232,120,110,0.34); background:rgba(232,120,110,0.08); border-radius:8px;">
+            <div style="font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#e8786e; margin-bottom:5px;">Couldn't publish</div>
+            <div style="font-size:12px; line-height:1.55; color:#e6c4c0;">{{ pubMsg }}</div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex; align-items:center; gap:8px; margin-top:16px; font-size:10.5px; letter-spacing:0.06em; color:#56564f;">
+          <span style="width:6px; height:6px; border-radius:999px; background:#7be0a3;"></span>
+          <span>Connected to {{ repoLabel }}</span>
+          <span onClick="{{ disconnectGit }}" style="color:#56564f; cursor:pointer; text-decoration:underline; margin-left:2px;" style-hover="color:#9a9a93;">Disconnect</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ notConnected }}" hint-placeholder-val="{{ true }}">
+        <p style="margin:0 0 18px; font-size:12.5px; line-height:1.65; color:#9a9a93;">Connect this site to GitHub <b style="color:#cdcdc6;">once</b>, and from then on every change publishes with a single click — no copy-paste, no extra services. Your edits live only on this device until you do.</p>
+
+        <div style="display:flex; flex-direction:column; gap:11px; margin-bottom:16px;">
+          <div style="display:flex; gap:12px; align-items:flex-start;"><span style="flex:none; width:20px; height:20px; border-radius:999px; background:rgba(123,224,163,0.14); color:#7be0a3; font-size:11px; display:flex; align-items:center; justify-content:center;">1</span><span style="font-size:12.5px; line-height:1.55; color:#cdcdc6;"><a href="{{ newTokenUrl }}" target="_blank" rel="noopener" style="color:#7be0a3; text-decoration:underline;">Open GitHub's token page →</a> Set <b style="color:#f5f5f3;">Repository access</b> to only your portfolio repo, and under <b style="color:#f5f5f3;">Permissions → Contents</b> choose <b style="color:#f5f5f3;">Read and write</b>. Generate it and copy the token.</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start;"><span style="flex:none; width:20px; height:20px; border-radius:999px; background:rgba(123,224,163,0.14); color:#7be0a3; font-size:11px; display:flex; align-items:center; justify-content:center;">2</span><span style="font-size:12.5px; line-height:1.55; color:#cdcdc6;">Paste it below and click <b style="color:#f5f5f3;">Connect</b>. It's stored only in this browser, on this device.</span></div>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:6px;">
+          <input type="password" value="{{ tokenInput }}" onInput="{{ setTokenInput }}" placeholder="github_pat_…" style="flex:1; min-width:220px; background:#080809; border:1px solid rgba(255,255,255,0.14); border-radius:6px; padding:11px 13px; font-family:var(--font-mono,'JetBrains Mono',monospace); font-size:12px; color:#f5f5f3; outline:none;" />
+          <span onClick="{{ connectToken }}" style="background:#f5f5f3; color:#0a0a0a; padding:11px 20px; border-radius:6px; cursor:pointer; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;" style-hover="opacity:0.88;">Connect</span>
+        </div>
+        <div style="font-size:10.5px; line-height:1.5; color:#56564f; margin-bottom:18px;">The token never leaves your browser. To revoke it later, delete it on GitHub — that instantly cuts off access.</div>
+      </sc-if>
+
+      <div onClick="{{ toggleManual }}" style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#7d7d78; cursor:pointer; display:flex; align-items:center; gap:7px;" style-hover="color:#cdcdc6;">{{ manualToggleLabel }}</div>
+      <sc-if value="{{ showManual }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:14px 0 14px; font-size:12px; line-height:1.6; color:#9a9a93;">No token needed — copy the content file and paste it into GitHub yourself.</p>
+        <div style="position:relative; margin-bottom:14px;">
+          <pre style="margin:0; max-height:200px; overflow:auto; background:#080809; border:1px solid rgba(255,255,255,0.09); border-radius:8px; padding:14px 16px; font-size:11.5px; line-height:1.55; color:#b9c7bd; white-space:pre; -webkit-overflow-scrolling:touch;">{{ pubText }}</pre>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+          <span onClick="{{ copyPub }}" style="display:flex; align-items:center; gap:8px; background:{{ copyBg }}; color:{{ copyFg }}; padding:10px 16px; border-radius:6px; cursor:pointer; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;" style-hover="opacity:0.88;">{{ copyLabel }}</span>
+          <a href="{{ ghEditUrl }}" target="_blank" rel="noopener" onClick="{{ markCopied }}" style="display:flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,0.18); color:#f5f5f3; padding:10px 16px; border-radius:6px; cursor:pointer; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none;" style-hover="border-color:rgba(255,255,255,0.4);">Open on GitHub →</a>
+          <span onClick="{{ downloadPub }}" style="color:#7d7d78; cursor:pointer; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; margin-left:2px;" style-hover="color:#f5f5f3;">Download file</span>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { cat: 'All', open: false, idx: 0, page: 'home', editing: false, overrides: {}, thumbs: {}, durations: {}, slide: 0, font: 0, fontOpen: false, added: [], catLabels: {}, thumbKinds: {}, expanded: false, siteText: {}, admin: false, content: null };
+  state = { cat: 'All', open: false, idx: 0, page: 'home', editing: false, overrides: {}, thumbs: {}, durations: {}, slide: 0, font: 0, fontOpen: false, added: [], catLabels: {}, thumbKinds: {}, expanded: false, siteText: {}, admin: false, content: null, pubOpen: false, pubCopied: false, ghToken: '', tokenInput: '', showToken: false, showManual: false, pubStatus: '', pubMsg: '', filmOrder: null, dragKey: null, dragOverKey: null, hiddenCats: [] };
 
   // ── Published content (the source of truth every visitor sees) ───────────
   // films / category labels / tagline live in content/site.json, committed to
-  // the repo. Decap CMS edits that file → Netlify redeploys → live. The baked
-  // `projects` array below is only a fallback for opening the file with no
+  // the repo. The admin edits in place, hits Publish, and pastes the updated
+  // JSON into the repo → the Git host redeploys → live. The baked `projects`
+  // array below is only a fallback for opening the file with no
   // server (file://), where fetch can't reach the JSON.
   loadContent() {
     fetch('content/site.json', { cache: 'no-store' })
@@ -416,8 +498,138 @@ class Component extends DCLogic {
       return localStorage.getItem('filmportfolio:admin') === '1';
     } catch (e) { return false; }
   }
-  exitAdmin() { try { localStorage.removeItem('filmportfolio:admin'); } catch (e) {} this.setState({ admin: false, editing: false, fontOpen: false }); }
+  exitAdmin() { try { localStorage.removeItem('filmportfolio:admin'); } catch (e) {} this.setState({ admin: false, editing: false, fontOpen: false, pubOpen: false }); }
   loadFont() { try { const v = parseInt(localStorage.getItem('filmportfolio:font'), 10); return isNaN(v) ? 0 : v; } catch (e) { return 0; } }
+
+  // ── Publish: serialize the current (edited) site into content/site.json ──
+  // Path A — no live dashboard. The admin edits in place; "Publish" hands back
+  // the exact JSON the site reads, to paste into the repo. Git host rebuilds.
+  GH_REPO = 'jcplantainz/JCM-Web-Portfolio';
+  GH_BRANCH = 'main';
+  GH_FILE = 'content/site.json';
+  SITE_URL = 'https://jcmarcellus.cc';
+  get ghEditUrl() { return `https://github.com/${this.GH_REPO}/edit/${this.GH_BRANCH}/${this.GH_FILE}`; }
+
+  // a poster only publishes if it's a real hosted URL; device-uploaded stills (blobs) can't travel
+  publishablePoster(p) {
+    const t = (this.state.thumbs || {})[p._key];
+    const kind = (this.state.thumbKinds || {})[p._key];
+    if (kind === 'poster' && t && /^https?:/i.test(t)) return t;
+    if (p.poster && /^https?:/i.test(p.poster)) return p.poster;
+    return '';   // gradient, or auto-derived from the video on the live site
+  }
+  // blob:/data: videos are uploaded local files — they live on this device only
+  publishableVideo(v) { v = String(v || ''); return (/^blob:/i.test(v) || /^data:/i.test(v)) ? '' : v; }
+
+  buildSiteJSON() {
+    const films = this.effective().map(p => ({
+      title: String(p.title || '').trim(),
+      client: String(p.client || '').trim(),
+      category: p.category || 'Commercials',
+      role: String(p.role || '').trim(),
+      year: String(p.year || '').trim(),
+      runtime: String(this.runtimeFor(p) || '').trim(),
+      video: this.publishableVideo(p.video),
+      poster: this.publishablePoster(p),
+    }));
+    const categoryLabels = {};
+    for (const k of ['Commercials', 'Narrative', 'Music Videos', 'Documentary']) categoryLabels[k] = this.catLabel(k);
+    const tagline = (this.state.siteText && this.state.siteText.tagline) || (this.state.content && this.state.content.tagline) || 'Los Angeles — Worldwide';
+    return { tagline, categoryLabels, films };
+  }
+  pubJSONText() { return JSON.stringify(this.buildSiteJSON(), null, 2) + '\n'; }
+
+  // films whose uploaded media can't publish until it's hosted with a URL
+  pubWarnings() {
+    const kinds = this.state.thumbKinds || {}, thumbs = this.state.thumbs || {}, out = [];
+    const blobPoster = this.effective().filter(p => kinds[p._key] === 'poster' && thumbs[p._key] && !/^https?:/i.test(thumbs[p._key])).map(p => p.title || 'Untitled');
+    const blobVideo = this.effective().filter(p => /^(blob:|data:)/i.test(String(p.video || ''))).map(p => p.title || 'Untitled');
+    if (blobPoster.length) out.push(`Poster uploaded from your computer — won't show online: ${blobPoster.join(', ')}.`);
+    if (blobVideo.length) out.push(`Video uploaded from your computer — won't play online: ${blobVideo.join(', ')}.`);
+    return out;
+  }
+
+  openPub() { this.setState({ pubOpen: true, pubCopied: false, fontOpen: false, pubStatus: '', pubMsg: '', showToken: false, ghToken: this.loadToken() }); }
+  closePub() { this.setState({ pubOpen: false }); }
+  copyPub() {
+    const text = this.pubJSONText();
+    const done = () => this.setState({ pubCopied: true });
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done).catch(() => this._copyFallback(text, done)); }
+      else this._copyFallback(text, done);
+    } catch (e) { this._copyFallback(text, done); }
+  }
+  _copyFallback(text, done) {
+    try {
+      const ta = document.createElement('textarea'); ta.value = text;
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0;'; document.body.appendChild(ta);
+      ta.focus(); ta.select(); document.execCommand('copy'); ta.remove(); done();
+    } catch (e) {}
+  }
+  downloadPub() {
+    try {
+      const blob = new Blob([this.pubJSONText()], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'site.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      this.setState({ pubCopied: true });
+    } catch (e) {}
+  }
+
+  // ── One-click publish: commit content/site.json straight to GitHub ───────
+  // A fine-grained token (Contents: read+write on this repo) is stored only in
+  // this browser. Publish does GET sha → PUT new content via the Contents API;
+  // the connected host (Netlify / Cloudflare Pages) auto-deploys the commit.
+  GH_NEW_TOKEN_URL = 'https://github.com/settings/personal-access-tokens/new';
+  loadToken() { try { return localStorage.getItem('filmportfolio:ghtoken') || ''; } catch (e) { return ''; } }
+  saveToken(t) { try { if (t) localStorage.setItem('filmportfolio:ghtoken', t); else localStorage.removeItem('filmportfolio:ghtoken'); } catch (e) {} }
+  b64utf8(text) { return btoa(unescape(encodeURIComponent(text))); }
+
+  connectToken() {
+    const t = (this.state.tokenInput || '').trim();
+    if (!t) return;
+    this.saveToken(t);
+    this.setState({ ghToken: t, tokenInput: '', showToken: false, pubStatus: '', pubMsg: '' });
+  }
+  disconnectGit() {
+    this.saveToken('');
+    this.setState({ ghToken: '', pubStatus: '', pubMsg: '', showToken: false });
+  }
+
+  async publishLive() {
+    const token = this.state.ghToken;
+    if (!token) { this.setState({ showToken: true }); return; }
+    if (this.state.pubStatus === 'publishing') return;
+    this.setState({ pubStatus: 'publishing', pubMsg: '' });
+    const api = `https://api.github.com/repos/${this.GH_REPO}/contents/${this.GH_FILE}`;
+    const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+    try {
+      let sha;
+      const get = await fetch(`${api}?ref=${encodeURIComponent(this.GH_BRANCH)}&t=${Date.now()}`, { headers, cache: 'no-store' });
+      if (get.status === 200) { sha = (await get.json()).sha; }
+      else if (get.status === 404) { sha = undefined; }   // file doesn't exist yet → create it
+      else if (get.status === 401) { throw new Error('Token rejected (401). It may be expired — make a new one and reconnect.'); }
+      else if (get.status === 403) { throw new Error('Access denied (403). The token needs Contents → Read and write on this repo.'); }
+      else if (get.status === 404) { throw new Error('Repo or file path not found (404). Check the repository name.'); }
+      const put = await fetch(api, {
+        method: 'PUT', headers,
+        body: JSON.stringify({ message: 'Update portfolio content via site editor', content: this.b64utf8(this.pubJSONText()), sha, branch: this.GH_BRANCH }),
+      });
+      if (put.status === 200 || put.status === 201) {
+        this.setState({ pubStatus: 'ok', pubMsg: '' });
+      } else {
+        const j = await put.json().catch(() => ({}));
+        if (put.status === 401) throw new Error('Token rejected (401). Make a new one and reconnect.');
+        if (put.status === 403) throw new Error('Access denied (403). The token needs Contents → Read and write on this repo.');
+        if (put.status === 409) throw new Error('The file changed on GitHub since this page loaded. Reload and publish again.');
+        throw new Error((j && j.message) ? j.message : `GitHub returned ${put.status}.`);
+      }
+    } catch (e) {
+      const offline = (e && (e.name === 'TypeError' || /Failed to fetch/i.test(e.message || '')));
+      this.setState({ pubStatus: 'error', pubMsg: offline ? 'Could not reach GitHub — check your internet connection.' : ((e && e.message) || 'Something went wrong.') });
+    }
+  }
 
   // ── HOW TO ADD YOUR WORK ──────────────────────────────────────────────
   //  video:  a Vimeo / YouTube link  OR  a path to an uploaded .mp4
@@ -727,6 +939,32 @@ class Component extends DCLogic {
   // pull the title + exact runtime (and a poster) straight from the linked video, on demand
   syncMetaNow(key) { this._titleSync.add(key); this.forgetAttempts(key); this.resolveMeta(); }
 
+  // ── drag-to-reorder ──────────────────────────────────────────────────────
+  loadOrder() { try { const v = localStorage.getItem('filmportfolio:order'); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  persistOrder(o) { try { if (o) localStorage.setItem('filmportfolio:order', JSON.stringify(o)); else localStorage.removeItem('filmportfolio:order'); } catch (e) {} }
+  reorder(fromKey, toKey) {
+    if (fromKey === toKey) { this.setState({ dragKey: null, dragOverKey: null }); return; }
+    const keys = this.effective().map(p => p._key);
+    const fi = keys.indexOf(fromKey);
+    if (fi !== -1) keys.splice(fi, 1);
+    const ti = keys.indexOf(toKey);
+    if (ti !== -1) keys.splice(ti, 0, fromKey); else keys.push(fromKey);
+    this.persistOrder(keys);
+    this.setState({ filmOrder: keys, dragKey: null, dragOverKey: null });
+  }
+
+  // ── tab visibility (hide / show category pages) ─────────────────────────
+  loadHiddenCats() { try { return JSON.parse(localStorage.getItem('filmportfolio:hidden') || '[]'); } catch (e) { return []; } }
+  persistHiddenCats(a) { try { localStorage.setItem('filmportfolio:hidden', JSON.stringify(a)); } catch (e) {} }
+  toggleHideCat(key) {
+    this.setState(s => {
+      const cur = s.hiddenCats || [];
+      const next = cur.includes(key) ? cur.filter(k => k !== key) : [...cur, key];
+      this.persistHiddenCats(next);
+      return { hiddenCats: next };
+    });
+  }
+
   effective() {
     const ov = this.state.overrides || {};
     // _key is each film's stable identity — built-in films key off their original title,
@@ -737,13 +975,21 @@ class Component extends DCLogic {
       ...published.map(p => ({ _key: p.title, ...p })),
       ...(this.state.added || []).map(p => ({ _key: p.id, isAdded: true, ...p })),
     ];
-    return base.map(p => { const e = { ...p, ...(ov[p._key] || {}) }; if (!e.bg) e.bg = this.bgFor(e._key); return e; });
+    const mapped = base.map(p => { const e = { ...p, ...(ov[p._key] || {}) }; if (!e.bg) e.bg = this.bgFor(e._key); return e; });
+    const order = this.state.filmOrder;
+    if (order && order.length) {
+      const pos = {}; order.forEach((k, i) => { pos[k] = i; });
+      mapped.sort((a, b) => (pos[a._key] ?? 999999) - (pos[b._key] ?? 999999));
+    }
+    return mapped;
   }
 
   get filtered() {
     const c = this.state.cat;
     const list = this.effective();
-    return c === 'All' ? list : list.filter(p => p.category === c);
+    const hidden = this.state.hiddenCats || [];
+    const visible = this.state.admin ? list : list.filter(p => !hidden.includes(p.category));
+    return c === 'All' ? visible : visible.filter(p => p.category === c);
   }
 
   // ── upload / override handling ──────────────────────────────────────────
@@ -886,21 +1132,29 @@ class Component extends DCLogic {
     const eff = this.effective();
     const slide = eff.length ? (this.state.slide % eff.length) : 0;
     const editing = this.state.editing;
+    const hiddenCats = this.state.hiddenCats || [];
+    const admin = this.state.admin;
     const cats = this.cats.map(key => {
       const on = key === active;
       const editable = key !== 'All';
+      const hidden = hiddenCats.includes(key);
       return {
         key,
         name: this.catLabel(key),
         label: this.catLabel(key),
         editable,
+        hidden,
         showInput: editing && editable,
-        showButton: !(editing && editable),
+        showButton: !editing && (admin || !hidden),
+        toggleHide: (e) => { if (e) e.stopPropagation(); this.toggleHideCat(key); },
+        eyeLabel: hidden ? 'SHOW' : 'HIDE',
+        eyeColor: hidden ? '#7be0a3' : '#56564f',
+        eyeTitle: hidden ? 'Show this tab to visitors' : 'Hide this tab from visitors',
         setLabel: (e) => this.setCatLabel(key, e.target.value),
         select: () => this.setState({ cat: key }),
-        bg: on ? '#f5f5f3' : 'transparent',
-        color: on ? '#0a0a0a' : '#9a9a93',
-        border: on ? '#f5f5f3' : 'rgba(255,255,255,0.14)',
+        bg: on ? '#f5f5f3' : (hidden && admin ? 'rgba(255,255,255,0.03)' : 'transparent'),
+        color: on ? '#0a0a0a' : (hidden && admin ? '#56564f' : '#9a9a93'),
+        border: on ? '#f5f5f3' : (hidden && admin ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.14)'),
       };
     });
     const catOptions = this.cats.filter(c => c !== 'All').map(key => ({ value: key, label: this.catLabel(key) }));
@@ -915,8 +1169,11 @@ class Component extends DCLogic {
       urlVal: (p.video && /^(https?:|videos\/)/.test(p.video)) ? p.video : '',
       open: () => { if (this.state.editing) return; this.setState({ open: true, idx: i }); },
       stop: (e) => e.stopPropagation(),
-      onDragOver: (e) => e.preventDefault(),
-      onDrop: (e) => { e.preventDefault(); e.stopPropagation(); this.handleFiles(p._key, e.dataTransfer.files); },
+      onDragOver: (e) => { e.preventDefault(); if (this.state.dragKey && this.state.dragKey !== p._key) this.setState({ dragOverKey: p._key }); e.dataTransfer.dropEffect = this.state.dragKey ? 'move' : 'copy'; },
+      onDrop: (e) => { e.preventDefault(); e.stopPropagation(); if (this.state.dragKey) { this.reorder(this.state.dragKey, p._key); } else { this.handleFiles(p._key, e.dataTransfer.files); } },
+      dragStart: (e) => { e.stopPropagation(); e.dataTransfer.effectAllowed = 'move'; this.setState({ dragKey: p._key, dragOverKey: null }); },
+      dragEnd: () => this.setState({ dragKey: null, dragOverKey: null }),
+      dragOutline: this.state.dragOverKey === p._key ? '2px solid rgba(123,224,163,0.55)' : '2px solid transparent',
       onPick: (e) => this.handleFiles(p._key, e.target.files),
       onUrl: (e) => { const val = e.target.value.trim(); if (val) this.saveOverride(p._key, { video: val }); },
       onUrlKey: (e) => { if (e.key === 'Enter') e.target.blur(); },
@@ -962,6 +1219,7 @@ class Component extends DCLogic {
     }));
     return {
       cats,
+      contactTypes: [...catOptions.map(o => o.label), 'Other'],
       items,
       countLabel: `${String(n).padStart(2, '0')} / ${String(eff.length).padStart(2, '0')} films`,
       addFilm: () => this.addProject(active === 'All' ? catOptions[0] : active),
@@ -1002,7 +1260,7 @@ class Component extends DCLogic {
       notHome: this.state.page !== 'home',
       homeSlides: eff.map((p, i) => ({ bg: this.thumbBg(p), opacity: i === slide ? 1 : 0 })),
       homeNowEl,
-      homeCats: this.cats.filter(c => c !== 'All').map(key => ({ name: this.catLabel(key), go: () => enterCat(key) })),
+      homeCats: this.cats.filter(c => c !== 'All' && (!hiddenCats.includes(c) || admin)).map(key => ({ name: this.catLabel(key), go: () => enterCat(key) })),
       goHome: () => this.setState({ page: 'home', open: false, editing: false }),
       enter: () => this.setState({ page: 'work' }),
       playCurrent: playCur,
@@ -1026,6 +1284,41 @@ class Component extends DCLogic {
       contactColor: this.state.page === 'contact' ? '#f5f5f3' : '#7d7d78',
       admin: this.state.admin,
       exitAdmin: () => this.exitAdmin(),
+      openPub: () => this.openPub(),
+      closePub: () => this.closePub(),
+      pubShow: this.state.pubOpen,
+      pubText: this.state.pubOpen ? this.pubJSONText() : '',
+      ghEditUrl: this.ghEditUrl,
+      copyPub: () => this.copyPub(),
+      downloadPub: () => this.downloadPub(),
+      markCopied: () => { if (!this.state.pubCopied) this.setState({ pubCopied: true }); },
+      copyLabel: this.state.pubCopied ? 'Copied ✓' : 'Copy file',
+      copyBg: this.state.pubCopied ? 'rgba(123,224,163,0.16)' : '#f5f5f3',
+      copyFg: this.state.pubCopied ? '#7be0a3' : '#0a0a0a',
+      warns: this.state.pubOpen ? this.pubWarnings() : [],
+      hasWarn: this.state.pubOpen && this.pubWarnings().length > 0,
+      // one-click direct-to-GitHub publish
+      gitConnected: !!this.state.ghToken,
+      notConnected: !this.state.ghToken,
+      repoLabel: this.GH_REPO,
+      newTokenUrl: this.GH_NEW_TOKEN_URL,
+      siteUrl: this.SITE_URL,
+      tokenInput: this.state.tokenInput,
+      setTokenInput: (e) => this.setState({ tokenInput: e.target.value }),
+      connectToken: () => this.connectToken(),
+      disconnectGit: () => this.disconnectGit(),
+      publishLive: () => this.publishLive(),
+      isPublishing: this.state.pubStatus === 'publishing',
+      pubOk: this.state.pubStatus === 'ok',
+      pubErr: this.state.pubStatus === 'error',
+      pubMsg: this.state.pubMsg,
+      pubBtnLabel: this.state.pubStatus === 'publishing' ? 'Publishing…' : (this.state.pubStatus === 'ok' ? 'Publish again' : 'Publish live →'),
+      pubBtnBg: this.state.pubStatus === 'publishing' ? 'rgba(123,224,163,0.5)' : '#7be0a3',
+      pubBtnFg: '#0a0a0a',
+      pubBtnCursor: this.state.pubStatus === 'publishing' ? 'default' : 'pointer',
+      showManual: this.state.showManual,
+      toggleManual: () => this.setState(s => ({ showManual: !s.showManual })),
+      manualToggleLabel: this.state.showManual ? '▾ Publish manually instead' : '▸ Publish manually instead',
       editing: this.state.editing,
       editLabel: this.state.editing ? 'Done' : 'Edit',
       toggleEdit: () => this.setState(s => ({ editing: !s.editing, page: 'work' })),
@@ -1036,7 +1329,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     const turls = this.loadThumbUrls(); this.persistThumbUrls(turls);   // migrate: purge legacy data-URL thumbs from localStorage
-    this.setState({ overrides: this.loadOverrides(), font: this.loadFont(), thumbs: turls, durations: this.loadDurations(), added: this.loadAdded(), catLabels: this.loadCatLabels(), thumbKinds: this.loadThumbKinds(), siteText: this.loadSiteText(), admin: this.detectAdmin() }, () => this.resolveMeta());
+    this.setState({ overrides: this.loadOverrides(), font: this.loadFont(), thumbs: turls, durations: this.loadDurations(), added: this.loadAdded(), catLabels: this.loadCatLabels(), thumbKinds: this.loadThumbKinds(), siteText: this.loadSiteText(), admin: this.detectAdmin(), ghToken: this.loadToken(), filmOrder: this.loadOrder(), hiddenCats: this.loadHiddenCats() }, () => this.resolveMeta());
     this.loadContent();
     this.rehydrateVideos();
     this.rehydrateThumbs();
